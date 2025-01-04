@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Image Batch Downloader</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap');
+
+        body {
+            font-family: 'PT Sans', sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            background-color: #f9fafb;
+            color: #333;
+        }
+
+        #drop-zone {
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: background-color 0.3s;
+            background-color: #ffffff;
+        }
+
+        #drop-zone.drag-over {
+            background-color: #e5e7eb;
+        }
+
+        #image-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .preview-item {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+
+        .preview-item img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        #actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button:not(.remove-btn) {
+            padding: 10px 20px;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #download-btn {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        #download-btn:hover {
+            background-color: #2563eb;
+        }
+
+        #download-zip-btn {
+            background-color: #10b981;
+            color: white;
+        }
+
+        #download-zip-btn:hover {
+            background-color: #059669;
+        }
+
+        #clear-btn {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        #clear-btn:hover {
+            background-color: #dc2626;
+        }
+
+        #prefix-container label {
+            display: inline-block;
+            margin-top: 6px;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        #prefix-container input {
+            padding: 8px 12px;
+            width: 200px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            font-family: 'PT Sans', sans-serif;
+            transition: border-color 0.2s;
+        }
+
+        #prefix-container input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+
+<body>
+    <h1>Image Batch Downloader</h1>
+
+    <div id="drop-zone">
+        <p>Paste images here or drag and drop files</p>
+        <input type="file" id="file-input" multiple accept="image/*" style="display:none;">
+        <button onclick="document.getElementById('file-input').click()">Select Files</button>
+    </div>
+
+    <div id="actions">
+        <button id="download-btn" style="display:none;">📥 Download Separately</button>
+        <button id="download-zip-btn" style="display:none;">🗜️ Download as ZIP</button>
+        <div id="prefix-container" style="display:none;">
+            <label for="prefix-input">Files prefix:</label>
+            <input type="text" id="prefix-input" placeholder="Optional prefix">
+        </div>
+        <button id="clear-btn" style="display:none;">🗑️ Clear All</button>
+    </div>
+
+    <div id="image-preview"></div>
+
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const imagePreview = document.getElementById('image-preview');
+        const downloadBtn = document.getElementById('download-btn');
+        const downloadZipBtn = document.getElementById('download-zip-btn');
+        const clearBtn = document.getElementById('clear-btn');
+        const prefixContainer = document.getElementById('prefix-container');
+
+        const images = [];
+
+        // Prevent default drag behaviors
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false);
+        });
+
+        // Highlight drop zone when item is dragged over
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+
+        // Handle dropped files
+        dropZone.addEventListener('drop', handleDrop, false);
+
+        // Handle paste event
+        dropZone.addEventListener('paste', handlePaste, false);
+
+        // Handle file input
+        fileInput.addEventListener('change', handleFiles, false);
+
+        // Download button
+        downloadBtn.addEventListener('click', downloadSeparateImages);
+        downloadZipBtn.addEventListener('click', downloadZipImages);
+
+        // Clear button
+        clearBtn.addEventListener('click', clearImages);
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        function highlight() {
+            dropZone.classList.add('drag-over');
+        }
+
+        function unhighlight() {
+            dropZone.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles({ target: { files } });
+        }
+
+        function handlePaste(e) {
+            const items = e.clipboardData.items;
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image') !== -1) {
+                    const blob = items[i].getAsFile();
+                    processFile(blob);
+                }
+            }
+        }
+
+        function handleFiles(e) {
+            const files = e.target.files;
+            Array.from(files).forEach(processFile);
+        }
+
+        function processFile(file) {
+            if (!file.type.startsWith('image/')) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const imgData = {
+                    file,
+                    dataUrl: e.target.result
+                };
+                images.push(imgData);
+                renderPreview(imgData, images.length - 1);
+                updateButtons();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function renderPreview(imgData, index) {
+            const previewItem = document.createElement('div');
+            previewItem.className = 'preview-item';
+
+            const img = document.createElement('img');
+            img.src = imgData.dataUrl;
+
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = '✕';
+            removeBtn.className = 'remove-btn';
+            removeBtn.onclick = () => removeImage(index);
+
+            previewItem.appendChild(img);
+            previewItem.appendChild(removeBtn);
+            imagePreview.appendChild(previewItem);
+        }
+
+        function removeImage(index) {
+            images.splice(index, 1);
+            imagePreview.innerHTML = '';
+            images.forEach((img, i) => renderPreview(img, i));
+            updateButtons();
+        }
+
+        async function downloadSeparateImages() {
+            const prefix = document.getElementById('prefix-input').value;
+            for (let i = 0; i < images.length; i++) {
+                await downloadSingleImage(images[i], i);
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+        }
+
+        function getFormattedDateTime() {
+            const date = new Date();
+            const pad = (n) => n.toString().padStart(2, '0');
+
+            const tzOffset = -date.getTimezoneOffset();
+            const tzHours = Math.floor(Math.abs(tzOffset) / 60);
+            const tzMinutes = Math.abs(tzOffset) % 60;
+            const tzSign = tzOffset >= 0 ? '+' : '-';
+            const tzString = `UTC${tzSign}${pad(tzHours)}${tzMinutes ? ':' + pad(tzMinutes) : ''}`;
+
+            return `-${pad(date.getDate())}_${pad(date.getMonth() + 1)}_${date.getFullYear()}`
+                + `-${pad(date.getHours())}-${pad(date.getMinutes())}-${pad(date.getSeconds())}`
+                + `-${tzString}`;
+        }
+
+        async function downloadZipImages() {
+            const prefix = document.getElementById('prefix-input').value;
+            const zip = new JSZip();
+            images.forEach((img, index) => {
+                const ext = img.file.type.split('/')[1];
+                const filename = `${prefix ? prefix + '_' : ''}image_${index + 1}${getFormattedDateTime()}.${ext}`;
+                const imageData = img.dataUrl.split(',')[1];
+                zip.file(filename, imageData, { base64: true });
+            });
+
+            const content = await zip.generateAsync({ type: "blob" });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(content);
+            link.download = `${prefix ? prefix + '_' : ''}images${getFormattedDateTime()}.zip`;
+            link.click();
+            URL.revokeObjectURL(link.href);
+        }
+
+        async function downloadSingleImage(img, index) {
+            const prefix = document.getElementById('prefix-input').value;
+            const link = document.createElement('a');
+            link.href = img.dataUrl;
+            link.download = `${prefix ? prefix + '_' : ''}image_${index + 1}${getFormattedDateTime()}.${img.file.type.split('/')[1]}`;
+            link.click();
+        }
+
+        function clearImages() {
+            images.length = 0;
+            imagePreview.innerHTML = '';
+            updateButtons();
+        }
+
+        function updateButtons() {
+            const hasImages = images.length > 0;
+            downloadBtn.style.display = hasImages ? 'block' : 'none';
+            downloadZipBtn.style.display = hasImages ? 'block' : 'none';
+            clearBtn.style.display = hasImages ? 'block' : 'none';
+            prefixContainer.style.display = hasImages ? 'block' : 'none';
+        }
+    </script>
+</body>
+
+</html>
