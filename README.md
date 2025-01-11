@@ -18,6 +18,10 @@ The prototype was created entirely using GitHub Copilot.
 
 ## Features
 
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/997d9bc5-c4f2-4a8e-b9ec-b31f5f594c60" width="640">
+</div>
+
 - **🖼️ Easy Image Collection**
     - 📋 Paste images directly from clipboard
 
