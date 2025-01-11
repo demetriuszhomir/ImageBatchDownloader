@@ -12,9 +12,9 @@ Fully local, single-file, no installation required.
 
 ⚠️ The tool is in development ⚠️
 
-You can download the fully functional prototype here: [prototype/ImageBatchDownloader.html](prototype/ImageBatchDownloader.html)
+You can download the prototype here: [prototype/ImageBatchDownloader.html](prototype/ImageBatchDownloader.html)
 <br>
-The prototype was created entirely using GitHub Copilot.
+The prototype is feature-complete and created entirely using GitHub Copilot.
 
 ## Features
 
@@ -23,7 +23,7 @@ The prototype was created entirely using GitHub Copilot.
 </div>
 
 - **🖼️ Easy Image Collection**
-    - 📋 Paste images directly from clipboard
+    - 📋 Paste images directly from the clipboard
 
     - 🖱️ Drag & drop support for files
     - 📂 Traditional file browser selection
@@ -33,7 +33,7 @@ The prototype was created entirely using GitHub Copilot.
 
     - 🗜️ ZIP archive for all images
     - 🏷️ Custom file naming with prefixes
-    - ⏰ Automatic timestamp in filenames
+    - ⏰ Automatic timestamps in filenames
 
 ## In Progress
 
