@@ -19,7 +19,7 @@ The prototype is feature-complete and created entirely using GitHub Copilot.
 ## Features
 
 <div align="center">
-    <img src="https://github.com/user-attachments/assets/997d9bc5-c4f2-4a8e-b9ec-b31f5f594c60" width="640">
+    <img src="https://github.com/user-attachments/assets/4c631ae8-8e32-4573-8d52-c4f845429414" width="640">
 </div>
 
 - **🖼️ Easy Image Collection**
