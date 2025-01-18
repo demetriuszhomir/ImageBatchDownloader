@@ -40,3 +40,5 @@ The prototype is feature-complete and created entirely using GitHub Copilot.
 I'm rewriting the prototype using SvelteKit. The full application will have the same features as the prototype.
 
 I share my progress on my [X profile](https://x.com/DemetriusZhomir) and [YouTube channel](https://www.youtube.com/@DemetriusZhomir). Follow me there for updates!
+
+<!-- TODO: how to build -->
