@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import JSZip from "jszip";
 
     interface ImageData {
         file: File;
@@ -154,21 +155,20 @@
     }
 
     async function downloadZipImages(): Promise<void> {
-        // XXX: update it when we have JSZip used here
-        // const prefix = prefixInput.value;
-        // const zip = new JSZip();
-        // images.forEach((img, index) => {
-        //     const ext = img.file.type.split("/")[1];
-        //     const filename = `${prefix ? prefix + "_" : ""}image_${index + 1}${getFormattedDateTime()}.${ext}`;
-        //     const imageData = img.dataUrl.split(",")[1];
-        //     zip.file(filename, imageData, { base64: true });
-        // });
-        // const content = await zip.generateAsync({ type: "blob" });
-        // const link = document.createElement("a");
-        // link.href = URL.createObjectURL(content);
-        // link.download = `${prefix ? prefix + "_" : ""}images${getFormattedDateTime()}.zip`;
-        // link.click();
-        // URL.revokeObjectURL(link.href);
+        const prefix = prefixInput.value;
+        const zip = new JSZip();
+        images.forEach((img, index) => {
+            const ext = img.file.type.split("/")[1];
+            const filename = `${prefix ? prefix + "_" : ""}image_${index + 1}${getFormattedDateTime()}.${ext}`;
+            const imageData = img.dataUrl.split(",")[1];
+            zip.file(filename, imageData, { base64: true });
+        });
+        const content = await zip.generateAsync({ type: "blob" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(content);
+        link.download = `${prefix ? prefix + "_" : ""}images${getFormattedDateTime()}.zip`;
+        link.click();
+        URL.revokeObjectURL(link.href);
     }
 
     async function downloadSingleImage(img: ImageData, index: number): Promise<void> {
