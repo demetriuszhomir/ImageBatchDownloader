@@ -214,7 +214,21 @@
 <div bind:this={imagePreview} id="image-preview"></div>
 
 <style>
-    @import url("https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap");
+    @font-face {
+        font-family: "PT Sans";
+        src: url('$lib/PT_Sans/PTSans-Regular.ttf') format('truetype');
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    @font-face {
+        font-family: "PT Sans";
+        src: url('$lib/PT_Sans/PTSans-Bold.ttf') format('truetype');
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+    }
 
     :global(body) {
         font-family: "PT Sans", sans-serif;
