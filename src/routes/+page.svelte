@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import JSZip from "jszip";
+    import favicon from "$lib/favicon.png?url";
 
     interface ImageData {
         file: File;
@@ -23,6 +24,13 @@
     }
 
     onMount(() => {
+        // Set favicon
+        const link = document.createElement("link");
+        link.rel = "icon";
+        link.type = "image/x-icon";
+        link.href = favicon;
+        document.head.appendChild(link);
+
         // Prevent default drag behaviors
         ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
             dropZone.addEventListener(eventName, preventDefaults, false);
