@@ -3,6 +3,10 @@
     import JSZip from "jszip";
     import favicon from "$lib/favicon.png?url";
 
+    // Add theme-related state
+    const themeModes = ['system', 'light', 'dark'];
+    let currentTheme = 'system';
+
     interface ImageData {
         file: File;
         dataUrl: string;
@@ -24,6 +28,10 @@
     }
 
     onMount(() => {
+        // Load saved theme
+        currentTheme = localStorage.getItem('theme') || 'system';
+        applyTheme(currentTheme);
+
         // Set favicon
         const link = document.createElement("link");
         link.rel = "icon";
@@ -59,7 +67,35 @@
                 document.body?.removeEventListener(eventName, preventDefaults, false);
             });
         };
+
+        // Add system theme change listener
+        if (currentTheme === 'system') {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                applyTheme('system');
+            });
+        }
     });
+
+    function applyTheme(mode: string): void {
+        if (mode === 'system') {
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.body.classList.add('dark-theme');
+            } else {
+                document.body.classList.remove('dark-theme');
+            }
+        } else if (mode === 'dark') {
+            document.body.classList.add('dark-theme');
+        } else {
+            document.body.classList.remove('dark-theme');
+        }
+    }
+
+    function toggleTheme(): void {
+        const nextIndex = (themeModes.indexOf(currentTheme) + 1) % themeModes.length;
+        currentTheme = themeModes[nextIndex];
+        localStorage.setItem('theme', currentTheme);
+        applyTheme(currentTheme);
+    }
 
     function preventDefaults(e: Event): void {
         e.preventDefault();
@@ -201,6 +237,10 @@
         prefixContainer.style.display = hasImages ? "block" : "none";
     }
 </script>
+
+<button id="theme-toggle" on:click={toggleTheme}>
+    Theme: {currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)}
+</button>
 
 <h1>Image Batch Downloader</h1>
 <div bind:this={dropZone} id="drop-zone">
@@ -359,5 +399,49 @@
         outline: none;
         border-color: #3b82f6;
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    /* Theme toggle button */
+    #theme-toggle {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        padding: 8px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        background-color: #3b82f6;
+        color: white;
+        z-index: 1000;
+    }
+
+    /* Dark theme styles */
+    :global(body.dark-theme) {
+        background-color: #1f2937;
+        color: #d1d5db;
+    }
+
+    :global(body.dark-theme) #drop-zone {
+        border-color: #374151;
+        background-color: #111827;
+    }
+
+    :global(body.dark-theme) :global(.preview-item) {
+        border-color: #374151;
+        background-color: #111827;
+    }
+
+    :global(body.dark-theme) button:not(.remove-btn) {
+        filter: brightness(0.9);
+    }
+
+    :global(body.dark-theme) input {
+        background-color: #374151;
+        border-color: #4b5563;
+        color: #d1d5db;
+    }
+
+    :global(body.dark-theme) #prefix-container label {
+        color: #d1d5db;
     }
 </style>
