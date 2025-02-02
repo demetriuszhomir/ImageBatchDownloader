@@ -6,6 +6,7 @@
     // Add theme-related state
     const themeModes = ['system', 'light', 'dark'];
     let currentTheme = 'system';
+    let systemThemeMediaQuery: MediaQueryList;
 
     interface ImageData {
         file: File;
@@ -60,20 +61,19 @@
         // Handle paste event
         dropZone.addEventListener("paste", handlePaste, false);
 
+        // Add system theme change listener
+        systemThemeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        systemThemeMediaQuery.addEventListener('change', handleSystemThemeChange);
+
         // Cleanup on component destroy
         return () => {
             ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
                 dropZone?.removeEventListener(eventName, preventDefaults, false);
                 document.body?.removeEventListener(eventName, preventDefaults, false);
             });
+            // Remove system theme listener
+            systemThemeMediaQuery?.removeEventListener('change', handleSystemThemeChange);
         };
-
-        // Add system theme change listener
-        if (currentTheme === 'system') {
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-                applyTheme('system');
-            });
-        }
     });
 
     function applyTheme(mode: string): void {
@@ -87,6 +87,12 @@
             document.body.classList.add('dark-theme');
         } else {
             document.body.classList.remove('dark-theme');
+        }
+    }
+
+    function handleSystemThemeChange(e: MediaQueryListEvent): void {
+        if (currentTheme === 'system') {
+            applyTheme('system');
         }
     }
 
