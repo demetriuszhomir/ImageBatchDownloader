@@ -403,16 +403,22 @@
 
     /* Theme toggle button */
     #theme-toggle {
-        position: fixed;
+        position: absolute;
         top: 10px;
         right: 10px;
-        padding: 8px 12px;
+        padding: 10px 20px;
+        font-weight: 700;
         border: none;
-        border-radius: 4px;
+        border-radius: 8px;
         cursor: pointer;
         background-color: #3b82f6;
         color: white;
+        transition: background-color 0.3s;
         z-index: 1000;
+    }
+
+    #theme-toggle:hover {
+        background-color: #2563eb;
     }
 
     /* Dark theme styles */
