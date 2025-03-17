@@ -33,13 +33,6 @@
         currentTheme = localStorage.getItem('theme') || 'system';
         applyTheme(currentTheme);
 
-        // Set favicon
-        const link = document.createElement("link");
-        link.rel = "icon";
-        link.type = "image/x-icon";
-        link.href = favicon;
-        document.head.appendChild(link);
-
         // Prevent default drag behaviors
         ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
             dropZone.addEventListener(eventName, preventDefaults, false);
@@ -243,6 +236,10 @@
         prefixContainer.style.display = hasImages ? "block" : "none";
     }
 </script>
+
+<svelte:head>
+    <link rel="icon" type="image/x-icon" href="{favicon}" />
+</svelte:head>
 
 <button id="theme-toggle" on:click={toggleTheme}>
     Theme: {currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)}
