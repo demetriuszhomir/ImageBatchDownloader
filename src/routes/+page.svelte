@@ -4,8 +4,8 @@
     import favicon from "$lib/favicon.png?url";
 
     // Add theme-related state
-    const themeModes = ['system', 'light', 'dark'];
-    let currentTheme = 'system';
+    const themeModes = ["system", "light", "dark"];
+    let currentTheme = "system";
     let systemThemeMediaQuery: MediaQueryList;
 
     interface ImageData {
@@ -30,7 +30,7 @@
 
     onMount(() => {
         // Load saved theme
-        currentTheme = localStorage.getItem('theme') || 'system';
+        currentTheme = localStorage.getItem("theme") || "system";
         applyTheme(currentTheme);
 
         // Prevent default drag behaviors
@@ -55,8 +55,8 @@
         dropZone.addEventListener("paste", handlePaste, false);
 
         // Add system theme change listener
-        systemThemeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        systemThemeMediaQuery.addEventListener('change', handleSystemThemeChange);
+        systemThemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+        systemThemeMediaQuery.addEventListener("change", handleSystemThemeChange);
 
         // Cleanup on component destroy
         return () => {
@@ -65,34 +65,34 @@
                 document.body?.removeEventListener(eventName, preventDefaults, false);
             });
             // Remove system theme listener
-            systemThemeMediaQuery?.removeEventListener('change', handleSystemThemeChange);
+            systemThemeMediaQuery?.removeEventListener("change", handleSystemThemeChange);
         };
     });
 
     function applyTheme(mode: string): void {
-        if (mode === 'system') {
-            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.body.classList.add('dark-theme');
+        if (mode === "system") {
+            if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+                document.body.classList.add("dark-theme");
             } else {
-                document.body.classList.remove('dark-theme');
+                document.body.classList.remove("dark-theme");
             }
-        } else if (mode === 'dark') {
-            document.body.classList.add('dark-theme');
+        } else if (mode === "dark") {
+            document.body.classList.add("dark-theme");
         } else {
-            document.body.classList.remove('dark-theme');
+            document.body.classList.remove("dark-theme");
         }
     }
 
     function handleSystemThemeChange(e: MediaQueryListEvent): void {
-        if (currentTheme === 'system') {
-            applyTheme('system');
+        if (currentTheme === "system") {
+            applyTheme("system");
         }
     }
 
     function toggleTheme(): void {
         const nextIndex = (themeModes.indexOf(currentTheme) + 1) % themeModes.length;
         currentTheme = themeModes[nextIndex];
-        localStorage.setItem('theme', currentTheme);
+        localStorage.setItem("theme", currentTheme);
         applyTheme(currentTheme);
     }
 
@@ -238,7 +238,7 @@
 </script>
 
 <svelte:head>
-    <link rel="icon" type="image/x-icon" href="{favicon}" />
+    <link rel="icon" type="image/x-icon" href={favicon} />
 </svelte:head>
 
 <button id="theme-toggle" on:click={toggleTheme}>
