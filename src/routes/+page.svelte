@@ -1,456 +1,271 @@
-<script lang="ts">
+<script runes lang="ts">
     import { onMount } from "svelte";
     import JSZip from "jszip";
-    import favicon from "$lib/favicon.png?url";
 
-    // Add theme-related state
-    const themeModes = ["system", "light", "dark"];
-    let currentTheme = "system";
-    let systemThemeMediaQuery: MediaQueryList;
+    import { Button } from "$lib/components/ui/button";
+    import { Card } from "$lib/components/ui/card";
+    import { AspectRatio } from "$lib/components/ui/aspect-ratio";
+    import { ScrollArea } from "$lib/components/ui/scroll-area";
+    import { Input } from "$lib/components/ui/input";
+    import { Toaster } from "$lib/components/ui/sonner";
+    import * as AlertDialog from "$lib/components/ui/alert-dialog";
+
+    import { Sun, Moon, Monitor, X, Download, FileArchive, Trash } from "@lucide/svelte";
+
+    import logoUrl from "$lib/logo.svg";
 
     interface ImageData {
+        id: number;
         file: File;
         dataUrl: string;
     }
 
-    let dropZone: HTMLDivElement;
-    let fileInput: HTMLInputElement;
-    let imagePreview: HTMLDivElement;
-    let downloadBtn: HTMLButtonElement;
-    let downloadZipBtn: HTMLButtonElement;
-    let clearBtn: HTMLButtonElement;
-    let prefixContainer: HTMLDivElement;
-    let prefixInput: HTMLInputElement;
+    // reactive state
+    let images = $state<ImageData[]>([]);
+    let prefix = $state("");
+    let nextId = $state(0);
 
-    const images: ImageData[] = [];
-
-    function selectFiles(): void {
-        fileInput.click();
-    }
-
-    onMount(() => {
-        // Load saved theme
-        currentTheme = localStorage.getItem("theme") || "system";
-        applyTheme(currentTheme);
-
-        // Prevent default drag behaviors
-        ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
-            dropZone.addEventListener(eventName, preventDefaults, false);
-            document.body.addEventListener(eventName, preventDefaults, false);
-        });
-
-        // Highlight drop zone when item is dragged over
-        ["dragenter", "dragover"].forEach((eventName) => {
-            dropZone.addEventListener(eventName, highlight, false);
-        });
-
-        ["dragleave", "drop"].forEach((eventName) => {
-            dropZone.addEventListener(eventName, unhighlight, false);
-        });
-
-        // Handle dropped files
-        dropZone.addEventListener("drop", handleDrop, false);
-
-        // Handle paste event
-        dropZone.addEventListener("paste", handlePaste, false);
-
-        // Add system theme change listener
-        systemThemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-        systemThemeMediaQuery.addEventListener("change", handleSystemThemeChange);
-
-        // Cleanup on component destroy
-        return () => {
-            ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
-                dropZone?.removeEventListener(eventName, preventDefaults, false);
-                document.body?.removeEventListener(eventName, preventDefaults, false);
-            });
-            // Remove system theme listener
-            systemThemeMediaQuery?.removeEventListener("change", handleSystemThemeChange);
-        };
-    });
-
-    function applyTheme(mode: string): void {
-        if (mode === "system") {
+    // theme: "system" | "light" | "dark"
+    let theme = $state<"system" | "light" | "dark">("system");
+    function applyTheme() {
+        if (theme === "system") {
             if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
                 document.body.classList.add("dark-theme");
             } else {
                 document.body.classList.remove("dark-theme");
             }
-        } else if (mode === "dark") {
+        } else if (theme === "dark") {
             document.body.classList.add("dark-theme");
         } else {
             document.body.classList.remove("dark-theme");
         }
     }
+    // sync to localStorage + apply
+    $effect(() => {
+        localStorage.setItem("theme", theme);
+        applyTheme();
+    });
 
-    function handleSystemThemeChange(e: MediaQueryListEvent): void {
-        if (currentTheme === "system") {
-            applyTheme("system");
-        }
-    }
+    onMount(() => {
+        // restore
+        theme = (localStorage.getItem("theme") as any) ?? "system";
+        applyTheme();
 
-    function toggleTheme(): void {
-        const nextIndex = (themeModes.indexOf(currentTheme) + 1) % themeModes.length;
-        currentTheme = themeModes[nextIndex];
-        localStorage.setItem("theme", currentTheme);
-        applyTheme(currentTheme);
-    }
+        // system‑dark listener
+        const mq = window.matchMedia("(prefers-color-scheme: dark)");
+        const handler = (e: MediaQueryListEvent) => {
+            if (theme === "system") applyTheme();
+        };
+        mq.addEventListener("change", handler);
 
-    function preventDefaults(e: Event): void {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-
-    function highlight(): void {
-        dropZone.classList.add("drag-over");
-    }
-
-    function unhighlight(): void {
-        dropZone.classList.remove("drag-over");
-    }
-
-    function handleDrop(e: DragEvent): void {
-        if (!e.dataTransfer) return;
-        const files = e.dataTransfer.files;
-        Array.from(files).forEach(processFile);
-    }
-
-    function handlePaste(e: ClipboardEvent): void {
-        if (!e.clipboardData) return;
-        const items = e.clipboardData.items;
-        for (let i = 0; i < items.length; i++) {
-            if (items[i].type.indexOf("image") !== -1) {
-                const blob = items[i].getAsFile();
-                if (blob) processFile(blob);
+        // clipboard + drag‑drop
+        const paste = (e: ClipboardEvent) => {
+            for (const item of e.clipboardData?.items ?? []) {
+                if (item.type.startsWith("image/")) {
+                    const f = item.getAsFile();
+                    if (f) addFile(f);
+                }
             }
-        }
+        };
+        const drop = (e: DragEvent) => {
+            e.preventDefault();
+            handleFiles(e.dataTransfer?.files ?? null);
+        };
+        const prevent = (e: DragEvent) => e.preventDefault();
+
+        window.addEventListener("paste", paste);
+        window.addEventListener("drop", drop);
+        window.addEventListener("dragover", prevent);
+
+        return () => {
+            mq.removeEventListener("change", handler);
+            window.removeEventListener("paste", paste);
+            window.removeEventListener("drop", drop);
+            window.removeEventListener("dragover", prevent);
+        };
+    });
+
+    function toggleTheme() {
+        const order = ["system", "light", "dark"] as const;
+        const i = order.indexOf(theme);
+        theme = order[(i + 1) % order.length];
     }
 
-    function handleFiles(e: Event & { currentTarget: EventTarget & HTMLInputElement }): void {
-        if (!e.currentTarget.files) return;
-        const files = e.currentTarget.files;
-        Array.from(files).forEach(processFile);
-    }
-
-    function processFile(file: Blob): void {
+    let fileInputEl: HTMLInputElement;
+    function addFile(file: File) {
         if (!file.type.startsWith("image/")) return;
-
         const reader = new FileReader();
-        reader.onload = (e: ProgressEvent<FileReader>) => {
-            const imgData: ImageData = {
-                file: file as File,
-                dataUrl: e.target?.result as string,
-            };
-            images.push(imgData);
-            renderPreview(imgData, images.length - 1);
-            updateButtons();
+        reader.onload = (e) => {
+            images = [...images, { id: nextId++, file, dataUrl: e.target!.result as string }];
         };
         reader.readAsDataURL(file);
     }
-
-    function renderPreview(imgData: ImageData, index: number): void {
-        const previewItem = document.createElement("div");
-        previewItem.className = "preview-item";
-
-        const img = document.createElement("img");
-        img.src = imgData.dataUrl;
-
-        const removeBtn = document.createElement("button");
-        removeBtn.textContent = "✕";
-        removeBtn.className = "remove-btn";
-        removeBtn.onclick = () => removeImage(index);
-
-        previewItem.appendChild(img);
-        previewItem.appendChild(removeBtn);
-        imagePreview.appendChild(previewItem);
+    function handleFiles(files: FileList | null) {
+        if (!files) return;
+        for (let i = 0; i < files.length; i++) addFile(files[i]!);
+    }
+    function removeImg(id: number) {
+        images = images.filter((i) => i.id !== id);
+    }
+    function clearAll() {
+        images = [];
     }
 
-    function removeImage(index: number): void {
-        images.splice(index, 1);
-        imagePreview.innerHTML = "";
-        images.forEach((img, i) => renderPreview(img, i));
-        updateButtons();
+    function ts() {
+        const d = new Date();
+        const pad = (n: number) => n.toString().padStart(2, "0");
+        const off = -d.getTimezoneOffset();
+        const sign = off >= 0 ? "+" : "-";
+        const hh = pad(Math.floor(Math.abs(off) / 60));
+        const mm = pad(Math.abs(off) % 60);
+        return `-${pad(d.getDate())}_${pad(d.getMonth() + 1)}_${d.getFullYear()}-${pad(
+            d.getHours(),
+        )}-${pad(d.getMinutes())}-${pad(d.getSeconds())}-UTC${sign}${hh}${mm === "00" ? "" : ":" + mm}`;
     }
 
-    async function downloadSeparateImages(): Promise<void> {
-        const prefix = prefixInput.value;
+    function dlSingle(img: ImageData, idx: number) {
+        const ext = img.file.type.split("/")[1];
+        const a = document.createElement("a");
+        a.href = img.dataUrl;
+        a.download = `${prefix ? prefix + "_" : ""}image_${idx + 1}${ts()}.${ext}`;
+        a.click();
+    }
+    async function dlAllSeparate() {
         for (let i = 0; i < images.length; i++) {
-            await downloadSingleImage(images[i], i);
-            await new Promise((resolve) => setTimeout(resolve, 500));
+            dlSingle(images[i], i);
+            await new Promise((r) => setTimeout(r, 300));
         }
     }
-
-    function getFormattedDateTime(): string {
-        const date = new Date();
-        const pad = (n: number) => n.toString().padStart(2, "0");
-
-        const tzOffset = -date.getTimezoneOffset();
-        const tzHours = Math.floor(Math.abs(tzOffset) / 60);
-        const tzMinutes = Math.abs(tzOffset) % 60;
-        const tzSign = tzOffset >= 0 ? "+" : "-";
-        const tzString = `UTC${tzSign}${pad(tzHours)}${tzMinutes ? ":" + pad(tzMinutes) : ""}`;
-
-        return (
-            `-${pad(date.getDate())}_${pad(date.getMonth() + 1)}_${date.getFullYear()}` +
-            `-${pad(date.getHours())}-${pad(date.getMinutes())}-${pad(date.getSeconds())}` +
-            `-${tzString}`
-        );
-    }
-
-    async function downloadZipImages(): Promise<void> {
-        const prefix = prefixInput.value;
+    async function dlZip() {
         const zip = new JSZip();
-        images.forEach((img, index) => {
+        for (let i = 0; i < images.length; i++) {
+            const img = images[i];
             const ext = img.file.type.split("/")[1];
-            const filename = `${prefix ? prefix + "_" : ""}image_${index + 1}${getFormattedDateTime()}.${ext}`;
-            const imageData = img.dataUrl.split(",")[1];
-            zip.file(filename, imageData, { base64: true });
-        });
-        const content = await zip.generateAsync({ type: "blob" });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(content);
-        link.download = `${prefix ? prefix + "_" : ""}images${getFormattedDateTime()}.zip`;
-        link.click();
-        URL.revokeObjectURL(link.href);
+            zip.file(`${prefix ? prefix + "_" : ""}image_${i + 1}${ts()}.${ext}`, img.dataUrl.split(",")[1], { base64: true });
+        }
+        const blob = await zip.generateAsync({ type: "blob" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `${prefix ? prefix + "_" : ""}images${ts()}.zip`;
+        a.click();
+        URL.revokeObjectURL(a.href);
     }
 
-    async function downloadSingleImage(img: ImageData, index: number): Promise<void> {
-        const prefix = prefixInput.value;
-        const link = document.createElement("a");
-        link.href = img.dataUrl;
-        link.download = `${prefix ? prefix + "_" : ""}image_${index + 1}${getFormattedDateTime()}.${img.file.type.split("/")[1]}`;
-        link.click();
-    }
-
-    function clearImages(): void {
-        images.length = 0;
-        imagePreview.innerHTML = "";
-        updateButtons();
-    }
-
-    function updateButtons(): void {
-        const hasImages = images.length > 0;
-        downloadBtn.style.display = hasImages ? "block" : "none";
-        downloadZipBtn.style.display = hasImages ? "block" : "none";
-        clearBtn.style.display = hasImages ? "block" : "none";
-        prefixContainer.style.display = hasImages ? "block" : "none";
-    }
+    // control the dialog open state
+    let clearDialogOpen = $state(false);
 </script>
 
-<svelte:head>
-    <link rel="icon" type="image/x-icon" href={favicon} />
-</svelte:head>
+<Toaster />
 
-<button id="theme-toggle" on:click={toggleTheme}>
-    Theme: {currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)}
-</button>
-
-<h1>Image Batch Downloader</h1>
-<div bind:this={dropZone} id="drop-zone">
-    <p>Paste images here or drag and drop files</p>
-    <input bind:this={fileInput} type="file" id="file-input" multiple accept="image/*" style="display:none;" on:change={handleFiles} />
-    <button on:click={selectFiles}>Select Files</button>
-</div>
-
-<div id="actions">
-    <button bind:this={downloadBtn} id="download-btn" style="display:none;" on:click={downloadSeparateImages}>📥 Download Separately</button>
-    <button bind:this={downloadZipBtn} id="download-zip-btn" style="display:none;" on:click={downloadZipImages}>🗜️ Download as ZIP</button>
-    <div bind:this={prefixContainer} id="prefix-container" style="display:none;">
-        <label for="prefix-input">Files prefix:</label>
-        <input bind:this={prefixInput} type="text" id="prefix-input" placeholder="Optional prefix" />
+<!-- fixed header -->
+<header class="fixed top-0 left-0 right-0 z-20 backdrop-blur bg-background/80 border-b p-4 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+        <img src={logoUrl} alt="Logo" class="w-6 h-6 shrink-0" />
+        <span class="font-semibold select-none">Image&nbsp;Batch&nbsp;Downloader</span>
     </div>
-    <button bind:this={clearBtn} id="clear-btn" style="display:none;" on:click={clearImages}>🗑️ Clear All</button>
-</div>
+    <Button variant="ghost" size="icon" aria-label="Toggle theme" onclick={toggleTheme}>
+        {#if theme === "light"}
+            <Sun class="w-5 h-5" />
+        {:else if theme === "dark"}
+            <Moon class="w-5 h-5" />
+        {:else}
+            <Monitor class="w-5 h-5" />
+        {/if}
+    </Button>
+</header>
 
-<div bind:this={imagePreview} id="image-preview"></div>
+<!-- main padded around header/footer -->
+<main class="pt-16 pb-16 flex flex-col flex-1 overflow-hidden">
+    <ScrollArea class="flex-1">
+        <div class="grid gap-4 p-4" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr));">
+            {#each images as img (img.id)}
+                <Card class="relative group">
+                    <AspectRatio ratio={1}>
+                        <img src={img.dataUrl} alt="preview" class="object-cover w-full h-full rounded-md" />
+                    </AspectRatio>
+                    <Button
+                        variant="destructive"
+                        size="icon"
+                        class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                        aria-label="Remove"
+                        onclick={() => removeImg(img.id)}
+                    >
+                        <X class="w-4 h-4" />
+                    </Button>
+                </Card>
+            {/each}
+
+            <Card
+                class="border-2 border-dashed cursor-pointer flex items-center justify-center text-muted-foreground hover:bg-accent"
+                onclick={() => fileInputEl.click()}
+            >
+                <div class="flex flex-col items-center gap-1 p-6 text-center select-none">
+                    <span class="text-4xl leading-none">＋</span>
+                    <span class="text-sm"> Paste / Drag‑n‑Drop / Click to browse </span>
+                </div>
+
+                <input
+                    type="file"
+                    class="hidden"
+                    multiple
+                    accept="image/*"
+                    bind:this={fileInputEl}
+                    onchange={(e) => handleFiles(e.currentTarget.files)}
+                />
+            </Card>
+        </div>
+    </ScrollArea>
+</main>
+
+<!-- fixed footer -->
+<footer class="fixed bottom-0 left-0 right-0 z-20 border-t bg-background/90 backdrop-blur p-4 flex flex-col sm:flex-row sm:items-center gap-3">
+    <div class="flex items-center gap-2 flex-1">
+        <span class="whitespace-nowrap">Prefix&nbsp;⟶</span>
+        <Input bind:value={prefix} placeholder="Optional prefix" class="max-w-xs" />
+    </div>
+
+    <div class="flex items-center gap-2">
+        <Button onclick={dlAllSeparate} disabled={images.length === 0}>
+            <Download class="w-4 h-4 mr-2" /> Download
+        </Button>
+
+        <Button onclick={dlZip} disabled={images.length === 0} variant="secondary">
+            <FileArchive class="w-4 h-4 mr-2" /> ZIP
+        </Button>
+
+        <!-- confirm dialog -->
+        <AlertDialog.Root bind:open={clearDialogOpen}>
+            <AlertDialog.Trigger>
+                <Button variant="destructive" disabled={images.length === 0}>
+                    <Trash class="w-4 h-4 mr-2" /> Clear&nbsp;All
+                </Button>
+            </AlertDialog.Trigger>
+
+            <AlertDialog.Content>
+                <AlertDialog.Header>
+                    <AlertDialog.Title>Clear all images?</AlertDialog.Title>
+                    <AlertDialog.Description>This action cannot be undone.</AlertDialog.Description>
+                </AlertDialog.Header>
+
+                <AlertDialog.Footer>
+                    <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+                    <AlertDialog.Action
+                        onclick={() => {
+                            clearAll();
+                            clearDialogOpen = false;
+                        }}
+                    >
+                        Clear
+                    </AlertDialog.Action>
+                </AlertDialog.Footer>
+            </AlertDialog.Content>
+        </AlertDialog.Root>
+    </div>
+</footer>
 
 <style>
-    @font-face {
-        font-family: "PT Sans";
-        src: url("$lib/PT_Sans/PTSans-Regular.ttf") format("truetype");
-        font-weight: 400;
-        font-style: normal;
-        font-display: swap;
-    }
-
-    @font-face {
-        font-family: "PT Sans";
-        src: url("$lib/PT_Sans/PTSans-Bold.ttf") format("truetype");
-        font-weight: 700;
-        font-style: normal;
-        font-display: swap;
-    }
-
-    :global(body) {
-        font-family: "PT Sans", sans-serif;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-        line-height: 1.6;
-        background-color: #f9fafb;
-        color: #333;
-    }
-
-    #drop-zone {
-        border: 2px dashed #d1d5db;
-        border-radius: 8px;
-        padding: 20px;
-        text-align: center;
-        transition: background-color 0.3s;
-        background-color: #ffffff;
-    }
-
-    :global(#drop-zone.drag-over) {
-        background-color: #e5e7eb;
-    }
-
-    #image-preview {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 20px;
-    }
-
-    :global(.preview-item) {
-        position: relative;
-        width: 150px;
-        height: 150px;
-        border: 1px solid #d1d5db;
-        border-radius: 8px;
-        overflow: hidden;
-        background-color: #ffffff;
-    }
-
-    :global(.preview-item img) {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: cover;
-    }
-
-    :global(.remove-btn) {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        background-color: red;
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 24px;
-        height: 24px;
-        cursor: pointer;
-    }
-
-    #actions {
-        margin-top: 20px;
-        display: flex;
-        gap: 10px;
-    }
-
-    button:not(.remove-btn) {
-        padding: 10px 20px;
-        font-weight: 700;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-
-    #download-btn {
-        background-color: #3b82f6;
-        color: white;
-    }
-
-    #download-btn:hover {
-        background-color: #2563eb;
-    }
-
-    #download-zip-btn {
-        background-color: #10b981;
-        color: white;
-    }
-
-    #download-zip-btn:hover {
-        background-color: #059669;
-    }
-
-    #clear-btn {
-        background-color: #ef4444;
-        color: white;
-    }
-
-    #clear-btn:hover {
-        background-color: #dc2626;
-    }
-
-    #prefix-container label {
-        display: inline-block;
-        margin-top: 6px;
-        font-weight: 600;
-        color: #111827;
-    }
-
-    #prefix-container input {
-        padding: 8px 12px;
-        width: 200px;
-        border: 1px solid #e5e7eb;
-        border-radius: 6px;
-        font-family: "PT Sans", sans-serif;
-        transition: border-color 0.2s;
-    }
-
-    #prefix-container input:focus {
-        outline: none;
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-
-    /* Theme toggle button */
-    #theme-toggle {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        padding: 10px 20px;
-        font-weight: 700;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        background-color: #3b82f6;
-        color: white;
-        transition: background-color 0.3s;
-        z-index: 1000;
-    }
-
-    #theme-toggle:hover {
-        background-color: #2563eb;
-    }
-
-    /* Dark theme styles */
-    :global(body.dark-theme) {
-        background-color: #1f2937;
-        color: #d1d5db;
-    }
-
-    :global(body.dark-theme) #drop-zone {
-        border-color: #374151;
-        background-color: #111827;
-    }
-
-    :global(body.dark-theme) :global(.preview-item) {
-        border-color: #374151;
-        background-color: #111827;
-    }
-
-    :global(body.dark-theme) button:not(.remove-btn) {
-        filter: brightness(0.9);
-    }
-
-    :global(body.dark-theme) input {
-        background-color: #374151;
-        border-color: #4b5563;
-        color: #d1d5db;
-    }
-
-    :global(body.dark-theme) #prefix-container label {
-        color: #d1d5db;
+    /* ensure the ScrollArea grows but doesn't hide under fixed header/footer */
+    main {
+        min-height: 0;
     }
 </style>
