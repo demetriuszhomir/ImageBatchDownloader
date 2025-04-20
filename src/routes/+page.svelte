@@ -220,7 +220,7 @@
 <!-- fixed footer -->
 <footer class="fixed bottom-0 left-0 right-0 z-20 border-t bg-background/90 backdrop-blur p-4 flex flex-col sm:flex-row sm:items-center gap-3">
     <div class="flex items-center gap-2 flex-1">
-        <span class="whitespace-nowrap">Prefix&nbsp;⟶</span>
+        <span class="whitespace-nowrap">Files prefix</span>
         <Input bind:value={prefix} placeholder="Optional prefix" class="max-w-xs" />
     </div>
 
