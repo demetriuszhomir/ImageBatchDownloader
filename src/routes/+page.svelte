@@ -7,7 +7,6 @@
     import { AspectRatio } from "$lib/components/ui/aspect-ratio";
     import { ScrollArea } from "$lib/components/ui/scroll-area";
     import { Input } from "$lib/components/ui/input";
-    import { Toaster } from "$lib/components/ui/sonner";
     import * as AlertDialog from "$lib/components/ui/alert-dialog";
 
     import { Sun, Moon, Monitor, X, Download, FileArchive, Trash } from "@lucide/svelte";
@@ -154,8 +153,6 @@
     // control the dialog open state
     let clearDialogOpen = $state(false);
 </script>
-
-<Toaster />
 
 <!-- fixed header -->
 <header class="fixed top-0 left-0 right-0 z-20 backdrop-blur bg-background/80 border-b p-4 flex items-center justify-between">
