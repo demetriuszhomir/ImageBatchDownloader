@@ -29,14 +29,14 @@
     function applyTheme() {
         if (theme === "system") {
             if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-                document.body.classList.add("dark-theme");
+                document.body.classList.add("dark");
             } else {
-                document.body.classList.remove("dark-theme");
+                document.body.classList.remove("dark");
             }
         } else if (theme === "dark") {
-            document.body.classList.add("dark-theme");
+            document.body.classList.add("dark");
         } else {
-            document.body.classList.remove("dark-theme");
+            document.body.classList.remove("dark");
         }
     }
     // sync to localStorage + apply
