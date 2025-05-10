@@ -19,13 +19,23 @@
         dataUrl: string;
     }
 
+    // Use $state for reactivity
+    let theme = $state("system" as "system" | "light" | "dark");
+
+    // On module load, set theme from localStorage if available
+    if (typeof window !== "undefined") {
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme === "system" || savedTheme === "light" || savedTheme === "dark") {
+            theme = savedTheme;
+        }
+    }
+
     // reactive state
     let images = $state<ImageData[]>([]);
     let prefix = $state("");
     let nextId = $state(0);
 
     // theme: "system" | "light" | "dark"
-    let theme = $state<"system" | "light" | "dark">("system");
     function applyTheme() {
         if (theme === "system") {
             if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
@@ -46,10 +56,6 @@
     });
 
     onMount(() => {
-        // restore
-        theme = (localStorage.getItem("theme") as any) ?? "system";
-        applyTheme();
-
         // system‑dark listener
         const mq = window.matchMedia("(prefers-color-scheme: dark)");
         const handler = (e: MediaQueryListEvent) => {
