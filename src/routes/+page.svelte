@@ -238,7 +238,7 @@
 
         <!-- confirm dialog -->
         <AlertDialog.Root bind:open={clearDialogOpen}>
-            <AlertDialog.Trigger>
+            <AlertDialog.Trigger disabled={images.length === 0}>
                 <Button variant="destructive" disabled={images.length === 0}>
                     <Trash class="w-4 h-4 mr-2" /> Clear&nbsp;All
                 </Button>
