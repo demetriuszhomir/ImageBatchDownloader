@@ -198,15 +198,18 @@
                 </Card>
             {/each}
 
-            <Card
-                class="border-2 border-dashed cursor-pointer flex items-center justify-center text-muted-foreground hover:bg-accent min-h-0 h-[110px] p-0"
-                onclick={() => fileInputEl.click()}
-            >
-                <div class="flex flex-col items-center gap-1 p-3 text-center select-none">
-                    <span class="text-4xl leading-none">＋</span>
-                    <span class="text-sm"> Paste / Drag‑n‑Drop / Click to browse </span>
-                </div>
-
+            <Card class="relative group p-2">
+                <AspectRatio ratio={1}>
+                    <div
+                        class="w-full h-full border-2 border-dashed rounded-md cursor-pointer flex items-center justify-center text-muted-foreground hover:bg-accent"
+                        onclick={() => fileInputEl.click()}
+                    >
+                        <div class="flex flex-col items-center gap-1 p-3 text-center select-none">
+                            <span class="text-4xl leading-none">＋</span>
+                            <span class="text-sm"> Paste / Drag‑n‑Drop / Click to browse </span>
+                        </div>
+                    </div>
+                </AspectRatio>
                 <input
                     type="file"
                     class="hidden"
