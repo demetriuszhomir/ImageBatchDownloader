@@ -1,4 +1,4 @@
-<script runes lang="ts">
+<script lang="ts">
     import { onMount } from "svelte";
     import JSZip from "jszip";
 
