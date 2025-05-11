@@ -200,15 +200,17 @@
 
             <Card class="relative group p-2">
                 <AspectRatio ratio={1}>
-                    <div
+                    <button
+                        type="button"
                         class="w-full h-full border-2 border-dashed rounded-md cursor-pointer flex items-center justify-center text-muted-foreground hover:bg-accent"
                         onclick={() => fileInputEl.click()}
+                        aria-label="Add images"
                     >
                         <div class="flex flex-col items-center gap-1 p-3 text-center select-none">
                             <span class="text-4xl leading-none">＋</span>
                             <span class="text-sm"> Paste / Drag‑n‑Drop / Click to browse </span>
                         </div>
-                    </div>
+                    </button>
                 </AspectRatio>
                 <input
                     type="file"
