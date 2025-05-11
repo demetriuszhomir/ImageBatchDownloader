@@ -161,12 +161,12 @@
 </script>
 
 <!-- fixed header -->
-<header class="fixed top-0 left-0 right-0 z-20 backdrop-blur bg-background/80 border-b p-4 flex items-center justify-between">
+<header class="fixed top-0 left-0 right-0 z-20 backdrop-blur bg-background/80 border-b p-3 flex items-center justify-between min-h-0 h-12">
     <div class="flex items-center gap-2">
-        <img src={logoUrl} alt="Logo" class="w-6 h-6 shrink-0" />
+        <img src={logoUrl} alt="Logo" class="w-7 h-7 shrink-0" />
         <span class="font-semibold select-none">Image&nbsp;Batch&nbsp;Downloader</span>
     </div>
-    <Button variant="ghost" size="icon" aria-label="Toggle theme" onclick={toggleTheme}>
+    <Button variant="ghost" size="icon" aria-label="Toggle theme" onclick={toggleTheme} class="w-9 h-9 min-w-0 min-h-0">
         {#if theme === "light"}
             <Sun class="w-5 h-5" />
         {:else if theme === "dark"}
@@ -178,18 +178,18 @@
 </header>
 
 <!-- main padded around header/footer -->
-<main class="pt-16 pb-16 flex flex-col flex-1 overflow-hidden">
+<main class="pt-14 pb-14 flex flex-col flex-1 overflow-hidden">
     <ScrollArea class="flex-1">
-        <div class="grid gap-4 p-4" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr));">
+        <div class="grid gap-3 p-3" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr));">
             {#each images as img (img.id)}
-                <Card class="relative group">
+                <Card class="relative group p-2">
                     <AspectRatio ratio={1}>
                         <img src={img.dataUrl} alt="preview" class="object-cover w-full h-full rounded-md" />
                     </AspectRatio>
                     <Button
                         variant="destructive"
                         size="icon"
-                        class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                        class="absolute top-2 right-2 m-1 w-8 h-8 min-w-0 min-h-0 opacity-0 group-hover:opacity-100 transition-opacity"
                         aria-label="Remove"
                         onclick={() => removeImg(img.id)}
                     >
@@ -199,10 +199,10 @@
             {/each}
 
             <Card
-                class="border-2 border-dashed cursor-pointer flex items-center justify-center text-muted-foreground hover:bg-accent"
+                class="border-2 border-dashed cursor-pointer flex items-center justify-center text-muted-foreground hover:bg-accent min-h-0 h-[110px] p-0"
                 onclick={() => fileInputEl.click()}
             >
-                <div class="flex flex-col items-center gap-1 p-6 text-center select-none">
+                <div class="flex flex-col items-center gap-1 p-3 text-center select-none">
                     <span class="text-4xl leading-none">＋</span>
                     <span class="text-sm"> Paste / Drag‑n‑Drop / Click to browse </span>
                 </div>
@@ -221,25 +221,25 @@
 </main>
 
 <!-- fixed footer -->
-<footer class="fixed bottom-0 left-0 right-0 z-20 border-t bg-background/90 backdrop-blur p-4 flex flex-col sm:flex-row sm:items-center gap-3">
-    <div class="flex items-center gap-2 flex-1">
-        <span class="whitespace-nowrap">Files prefix</span>
-        <Input bind:value={prefix} placeholder="Optional prefix" class="max-w-xs" />
+<footer class="fixed bottom-0 left-0 right-0 z-20 border-t bg-background/90 backdrop-blur p-3 flex flex-col sm:flex-row sm:items-center gap-3 min-h-0 h-14">
+    <div class="flex items-center gap-2 flex-1 min-w-0">
+        <span class="whitespace-nowrap text-sm">Files prefix</span>
+        <Input bind:value={prefix} placeholder="Optional prefix" class="max-w-xs h-9 px-3 py-1" />
     </div>
 
     <div class="flex items-center gap-2">
-        <Button onclick={dlAllSeparate} disabled={images.length === 0}>
+        <Button onclick={dlAllSeparate} disabled={images.length === 0} class="h-9 px-3 py-1">
             <Download class="w-4 h-4 mr-2" /> Download
         </Button>
 
-        <Button onclick={dlZip} disabled={images.length === 0} variant="secondary">
+        <Button onclick={dlZip} disabled={images.length === 0} variant="secondary" class="h-9 px-3 py-1">
             <FileArchive class="w-4 h-4 mr-2" /> ZIP
         </Button>
 
         <!-- confirm dialog -->
         <AlertDialog.Root bind:open={clearDialogOpen}>
             <AlertDialog.Trigger disabled={images.length === 0}>
-                <Button variant="destructive" disabled={images.length === 0}>
+                <Button variant="destructive" disabled={images.length === 0} class="h-9 px-3 py-1">
                     <Trash class="w-4 h-4 mr-2" /> Clear&nbsp;All
                 </Button>
             </AlertDialog.Trigger>
@@ -270,5 +270,9 @@
     /* ensure the ScrollArea grows but doesn't hide under fixed header/footer */
     main {
         min-height: 0;
+    }
+    header, footer {
+        font-size: inherit;
+        line-height: 1.1;
     }
 </style>
