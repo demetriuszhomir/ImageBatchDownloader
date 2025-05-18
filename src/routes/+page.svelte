@@ -229,7 +229,9 @@
 </main>
 
 <!-- fixed footer -->
-<footer class="fixed bottom-0 left-0 right-0 z-20 border-t bg-background/90 backdrop-blur p-3 flex flex-col sm:flex-row sm:items-center gap-3 min-h-0 h-14">
+<footer
+    class="fixed bottom-0 left-0 right-0 z-20 border-t bg-background/90 backdrop-blur p-3 flex flex-col sm:flex-row sm:items-center gap-3 min-h-0 h-14"
+>
     <div class="flex items-center gap-2 flex-1 min-w-0">
         <span class="whitespace-nowrap text-sm">Files prefix</span>
         <Input bind:value={prefix} placeholder="Optional prefix" class="max-w-xs h-9 px-3 py-1" />
@@ -279,7 +281,8 @@
     main {
         min-height: 0;
     }
-    header, footer {
+    header,
+    footer {
         font-size: inherit;
         line-height: 1.1;
     }
