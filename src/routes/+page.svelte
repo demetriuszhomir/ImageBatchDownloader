@@ -218,7 +218,10 @@
                     multiple
                     accept="image/*"
                     bind:this={fileInputEl}
-                    onchange={(e) => handleFiles(e.currentTarget.files)}
+                    onchange={(e) => {
+                        handleFiles(e.currentTarget.files);
+                        e.currentTarget.value = "";
+                    }}
                 />
             </Card>
         </div>
