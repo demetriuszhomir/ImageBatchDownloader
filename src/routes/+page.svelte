@@ -1,6 +1,5 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import JSZip from "jszip";
 
     import { Button } from "$lib/components/ui/button";
     import { Card } from "$lib/components/ui/card";
@@ -8,62 +7,15 @@
     import { ScrollArea } from "$lib/components/ui/scroll-area";
     import { Input } from "$lib/components/ui/input";
     import * as AlertDialog from "$lib/components/ui/alert-dialog";
+    import { X, Download, FileArchive, Trash } from "@lucide/svelte";
 
-    import { Sun, Moon, Monitor, X, Download, FileArchive, Trash } from "@lucide/svelte";
+    import { fileToDataUrl, type ImageData, downloadAllSeparate, downloadZip } from "$lib/file-utils";
 
-    import logoUrl from "$lib/logo.svg";
-
-    interface ImageData {
-        id: number;
-        file: File;
-        dataUrl: string;
-    }
-
-    // Use $state for reactivity
-    let theme = $state("system" as "system" | "light" | "dark");
-
-    // On module load, set theme from localStorage if available
-    if (typeof window !== "undefined") {
-        const savedTheme = localStorage.getItem("theme");
-        if (savedTheme === "system" || savedTheme === "light" || savedTheme === "dark") {
-            theme = savedTheme;
-        }
-    }
-
-    // reactive state
     let images = $state<ImageData[]>([]);
     let prefix = $state("");
     let nextId = $state(0);
 
-    // theme: "system" | "light" | "dark"
-    function applyTheme() {
-        if (theme === "system") {
-            if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-                document.body.classList.add("dark");
-            } else {
-                document.body.classList.remove("dark");
-            }
-        } else if (theme === "dark") {
-            document.body.classList.add("dark");
-        } else {
-            document.body.classList.remove("dark");
-        }
-    }
-    // sync to localStorage + apply
-    $effect(() => {
-        localStorage.setItem("theme", theme);
-        applyTheme();
-    });
-
     onMount(() => {
-        // system‑dark listener
-        const mq = window.matchMedia("(prefers-color-scheme: dark)");
-        const handler = (e: MediaQueryListEvent) => {
-            if (theme === "system") applyTheme();
-        };
-        mq.addEventListener("change", handler);
-
-        // clipboard + drag‑drop
         const paste = (e: ClipboardEvent) => {
             for (const item of e.clipboardData?.items ?? []) {
                 if (item.type.startsWith("image/")) {
@@ -83,27 +35,17 @@
         window.addEventListener("dragover", prevent);
 
         return () => {
-            mq.removeEventListener("change", handler);
             window.removeEventListener("paste", paste);
             window.removeEventListener("drop", drop);
             window.removeEventListener("dragover", prevent);
         };
     });
 
-    function toggleTheme() {
-        const order = ["system", "light", "dark"] as const;
-        const i = order.indexOf(theme);
-        theme = order[(i + 1) % order.length];
-    }
-
     let fileInputEl: HTMLInputElement;
-    function addFile(file: File) {
+    async function addFile(file: File) {
         if (!file.type.startsWith("image/")) return;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            images = [...images, { id: nextId++, file, dataUrl: e.target!.result as string }];
-        };
-        reader.readAsDataURL(file);
+        const dataUrl = await fileToDataUrl(file);
+        images = [...images, { id: nextId++, file, dataUrl }];
     }
     function handleFiles(files: FileList | null) {
         if (!files) return;
@@ -116,68 +58,17 @@
         images = [];
     }
 
-    function ts() {
-        const d = new Date();
-        const pad = (n: number) => n.toString().padStart(2, "0");
-        const off = -d.getTimezoneOffset();
-        const sign = off >= 0 ? "+" : "-";
-        const hh = pad(Math.floor(Math.abs(off) / 60));
-        const mm = pad(Math.abs(off) % 60);
-        return `-${pad(d.getDate())}_${pad(d.getMonth() + 1)}_${d.getFullYear()}-${pad(
-            d.getHours(),
-        )}-${pad(d.getMinutes())}-${pad(d.getSeconds())}-UTC${sign}${hh}${mm === "00" ? "" : ":" + mm}`;
+    function dlAllSeparate() {
+        downloadAllSeparate(images, prefix);
     }
 
-    function dlSingle(img: ImageData, idx: number) {
-        const ext = img.file.type.split("/")[1];
-        const a = document.createElement("a");
-        a.href = img.dataUrl;
-        a.download = `${prefix ? prefix + "_" : ""}image_${idx + 1}${ts()}.${ext}`;
-        a.click();
-    }
-    async function dlAllSeparate() {
-        for (let i = 0; i < images.length; i++) {
-            dlSingle(images[i], i);
-            await new Promise((r) => setTimeout(r, 300));
-        }
-    }
-    async function dlZip() {
-        const zip = new JSZip();
-        for (let i = 0; i < images.length; i++) {
-            const img = images[i];
-            const ext = img.file.type.split("/")[1];
-            zip.file(`${prefix ? prefix + "_" : ""}image_${i + 1}${ts()}.${ext}`, img.dataUrl.split(",")[1], { base64: true });
-        }
-        const blob = await zip.generateAsync({ type: "blob" });
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = `${prefix ? prefix + "_" : ""}images${ts()}.zip`;
-        a.click();
-        URL.revokeObjectURL(a.href);
+    function dlZip() {
+        downloadZip(images, prefix);
     }
 
-    // control the dialog open state
     let clearDialogOpen = $state(false);
 </script>
 
-<!-- fixed header -->
-<header class="fixed top-0 left-0 right-0 z-20 backdrop-blur bg-background/80 border-b p-3 flex items-center justify-between min-h-0 h-12">
-    <div class="flex items-center gap-2">
-        <img src={logoUrl} alt="Logo" class="w-7 h-7 shrink-0" />
-        <span class="font-semibold select-none">Image&nbsp;Batch&nbsp;Downloader</span>
-    </div>
-    <Button variant="ghost" size="icon" aria-label="Toggle theme" onclick={toggleTheme} class="w-9 h-9 min-w-0 min-h-0">
-        {#if theme === "light"}
-            <Sun class="w-5 h-5" />
-        {:else if theme === "dark"}
-            <Moon class="w-5 h-5" />
-        {:else}
-            <Monitor class="w-5 h-5" />
-        {/if}
-    </Button>
-</header>
-
-<!-- main padded around header/footer -->
 <main class="pt-14 pb-14 flex flex-col flex-1 overflow-hidden">
     <ScrollArea class="flex-1">
         <div class="grid gap-3 p-3" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr));">
@@ -228,7 +119,6 @@
     </ScrollArea>
 </main>
 
-<!-- fixed footer -->
 <footer
     class="fixed bottom-0 left-0 right-0 z-20 border-t bg-background/90 backdrop-blur p-3 flex flex-col sm:flex-row sm:items-center gap-3 min-h-0 h-14"
 >
@@ -246,7 +136,6 @@
             <FileArchive class="w-4 h-4 mr-2" /> ZIP
         </Button>
 
-        <!-- confirm dialog -->
         <AlertDialog.Root bind:open={clearDialogOpen}>
             <AlertDialog.Trigger disabled={images.length === 0}>
                 <Button variant="destructive" disabled={images.length === 0} class="h-9 px-3 py-1">
@@ -281,7 +170,6 @@
     main {
         min-height: 0;
     }
-    header,
     footer {
         font-size: inherit;
         line-height: 1.1;
