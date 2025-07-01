@@ -32,7 +32,7 @@
     --sidebar-border: hsl(192, 13%, 85%);
     --sidebar-ring: hsl(174, 45%, 40%);
 
-    --radius: 0.5rem;
+    --radius: 0.8rem;
 }
 
 .dark {
@@ -104,9 +104,39 @@
 @layer base {
     * {
         @apply border-border;
+        font-family: 'PT Sans', sans-serif;
+        /* font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif; */
     }
 
     body {
         @apply bg-background text-foreground;
     }
+}
+
+@font-face {
+    font-family: 'PT Sans';
+    src: url('$lib/PT_Sans/PTSans-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PT Sans';
+    src: url('$lib/PT_Sans/PTSans-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PT Sans';
+    src: url('$lib/PT_Sans/PTSans-Italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'PT Sans';
+    src: url('$lib/PT_Sans/PTSans-BoldItalic.ttf') format('truetype');
+    font-weight: 700;
+    font-style: italic;
 }
