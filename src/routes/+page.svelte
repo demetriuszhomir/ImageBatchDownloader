@@ -52,13 +52,7 @@
     </ScrollArea>
 </main>
 
-<Footer
-    bind:prefix
-    canDownload={images.length > 0}
-    downloadAll={dlAllSeparate}
-    downloadZip={dlZip}
-    clearAll={clearAll}
-/>
+<Footer bind:prefix canDownload={images.length > 0} downloadAll={dlAllSeparate} downloadZip={dlZip} {clearAll} />
 
 <style>
     /* ensure the ScrollArea grows but doesn't hide under fixed header/footer */
