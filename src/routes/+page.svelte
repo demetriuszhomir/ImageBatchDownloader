@@ -15,14 +15,14 @@
     let nextId = $state(0);
 
     onMount(() => setupPasteDrop(addFile, handleFiles));
+    function handleFiles(files: FileList | null) {
+        if (!files) return;
+        for (let i = 0; i < files.length; i++) addFile(files[i]!);
+    }
     async function addFile(file: File) {
         if (!file.type.startsWith("image/")) return;
         const dataUrl = await fileToDataUrl(file);
         images = [...images, { id: nextId++, file, dataUrl }];
-    }
-    function handleFiles(files: FileList | null) {
-        if (!files) return;
-        for (let i = 0; i < files.length; i++) addFile(files[i]!);
     }
     function removeImg(id: number) {
         images = images.filter((i) => i.id !== id);
