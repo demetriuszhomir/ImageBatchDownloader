@@ -12,13 +12,13 @@
         <img src={logoUrl} alt="Logo" class="w-7 h-7 shrink-0" />
         <span class="font-semibold select-none">Image&nbsp;Batch&nbsp;Downloader</span>
     </div>
-    <Button variant="ghost" size="icon" aria-label="Toggle theme" onclick={toggleTheme} class="w-9 h-9 min-w-0 min-h-0">
+    <Button variant="ghost" size="icon" aria-label="Toggle theme" onclick={toggleTheme}>
         {#if theme === "light"}
-            <Sun class="w-5 h-5" />
+            <Sun />
         {:else if theme === "dark"}
-            <Moon class="w-5 h-5" />
+            <Moon />
         {:else}
-            <Monitor class="w-5 h-5" />
+            <Monitor />
         {/if}
     </Button>
 </header>
