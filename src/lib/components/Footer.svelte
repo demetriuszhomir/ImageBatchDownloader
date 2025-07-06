@@ -44,6 +44,7 @@
                 <AlertDialog.Footer>
                     <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
                     <AlertDialog.Action
+                        class={buttonVariants({ variant: "destructive" })}
                         onclick={() => {
                             clearAll();
                             clearDialogOpen = false;
