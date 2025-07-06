@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Input } from "$lib/components/ui/input";
-    import { Button } from "$lib/components/ui/button";
+    import { Button, buttonVariants } from "$lib/components/ui/button";
     import * as AlertDialog from "$lib/components/ui/alert-dialog";
     import { Download, FileArchive, Trash } from "@lucide/svelte";
 
@@ -31,10 +31,8 @@
         </Button>
 
         <AlertDialog.Root bind:open={clearDialogOpen}>
-            <AlertDialog.Trigger disabled={!canDownload}>
-                <Button variant="destructive" disabled={!canDownload} class="h-9 px-3 py-1">
-                    <Trash class="w-4 h-4 mr-2" /> Clear&nbsp;All
-                </Button>
+            <AlertDialog.Trigger disabled={!canDownload} class={`h-9 px-3 py-1 ${buttonVariants({ variant: "destructive" })}`}>
+                <Trash class="w-4 h-4 mr-2" /> Clear&nbsp;All
             </AlertDialog.Trigger>
 
             <AlertDialog.Content>
