@@ -35,7 +35,7 @@
                 <Trash class="w-4 h-4 mr-2" /> Clear&nbsp;All
             </AlertDialog.Trigger>
 
-            <AlertDialog.Content>
+            <AlertDialog.Content position="bottom-right">
                 <AlertDialog.Header>
                     <AlertDialog.Title>Clear all images?</AlertDialog.Title>
                     <AlertDialog.Description>This action cannot be undone.</AlertDialog.Description>
