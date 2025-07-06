@@ -11,7 +11,7 @@
     <AspectRatio ratio={1}>
         <button
             type="button"
-            class="w-full h-full border-2 border-dashed rounded-md cursor-pointer flex items-center justify-center text-muted-foreground hover:bg-accent"
+            class="w-full h-full border-2 border-dashed rounded-md flex items-center justify-center text-muted-foreground hover:bg-accent"
             onclick={() => fileInputEl.click()}
             aria-label="Add images"
         >

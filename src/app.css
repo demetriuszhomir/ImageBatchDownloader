@@ -111,6 +111,11 @@
     body {
         @apply bg-background text-foreground;
     }
+
+    button:hover,
+    [data-slot="button"]:not(:disabled):hover {
+        cursor: pointer;
+    }
 }
 
 @font-face {
