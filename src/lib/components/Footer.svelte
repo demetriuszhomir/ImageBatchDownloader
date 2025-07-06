@@ -23,16 +23,16 @@
 
     <div class="flex items-center gap-2">
         <Button onclick={downloadAll} disabled={!canDownload} class="h-9 px-3 py-1">
-            <Download class="w-4 h-4 mr-2" /> Download
+            <Download /> Download
         </Button>
 
         <Button onclick={downloadZip} disabled={!canDownload} variant="secondary" class="h-9 px-3 py-1">
-            <FileArchive class="w-4 h-4 mr-2" /> ZIP
+            <FileArchive /> ZIP
         </Button>
 
         <AlertDialog.Root bind:open={clearDialogOpen}>
             <AlertDialog.Trigger disabled={!canDownload} class={`h-9 px-3 py-1 ${buttonVariants({ variant: "destructive" })}`}>
-                <Trash class="w-4 h-4 mr-2" /> Clear&nbsp;All
+                <Trash /> Clear&nbsp;All
             </AlertDialog.Trigger>
 
             <AlertDialog.Content position="bottom-right">
