@@ -40,9 +40,9 @@
     }
 </script>
 
-<main class="pt-14 pb-14 flex flex-col flex-1 overflow-hidden">
-    <ScrollArea class="flex-1">
-        <div class="grid gap-3 p-3" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr));">
+<main class="flex flex-col flex-1 min-h-0 h-[100dvh]">
+    <ScrollArea class="flex-1 min-h-0" scrollbarYClasses="pt-12 pb-14">
+        <div class="grid gap-3 p-3 pt-15 pb-17" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr));">
             {#each images as img (img.id)}
                 <ImageCard {img} onRemove={removeImg} />
             {/each}
@@ -53,10 +53,3 @@
 </main>
 
 <Footer bind:prefix canDownload={images.length > 0} downloadAll={dlAllSeparate} downloadZip={dlZip} {clearAll} />
-
-<style>
-    /* ensure the ScrollArea grows but doesn't hide under fixed header/footer */
-    main {
-        min-height: 0;
-    }
-</style>
