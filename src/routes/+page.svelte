@@ -41,8 +41,14 @@
 </script>
 
 <main class="flex flex-col flex-1 min-h-0 h-[100dvh]">
-    <ScrollArea class="flex-1 min-h-0" scrollbarYClasses="pt-12 pb-14">
-        <div class="grid gap-3 p-3 pt-15 pb-17" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr));">
+    <ScrollArea
+        class="flex-1 min-h-0"
+        scrollbarYClasses="pt-12 pb-14 max-[40rem]:pb-27 max-[16rem]:pb-34 max-[10rem]:pb-45"
+    >
+        <div
+            class="grid gap-3 p-3 pt-15 pb-17 max-[40rem]:pb-30 max-[16rem]:pb-37 max-[10rem]:pb-48"
+            style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr));"
+        >
             {#each images as img (img.id)}
                 <ImageCard {img} onRemove={removeImg} />
             {/each}

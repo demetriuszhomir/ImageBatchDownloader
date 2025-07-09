@@ -14,25 +14,31 @@
 </script>
 
 <footer
-    class="fixed bottom-0 left-0 right-0 z-20 border-t bg-background/90 backdrop-blur p-3 flex flex-col sm:flex-row sm:items-center gap-3 min-h-0 h-14"
+    class="fixed bottom-0 left-0 right-0 z-20 border-t bg-background/90 backdrop-blur p-3 flex flex-col items-center sm:flex-row gap-3 min-h-0 h-auto sm:h-14"
 >
-    <div class="flex items-center gap-2 flex-1 min-w-0">
+    <div
+        class="flex items-center gap-2 w-full sm:flex-1 min-w-0 justify-center sm:justify-start max-[16rem]:flex-col max-[16rem]:items-center"
+    >
         <span class="whitespace-nowrap text-sm">Files prefix</span>
-        <Input bind:value={prefix} placeholder="Optional prefix" class="max-w-xs h-9 px-3 py-1" />
+        <Input
+            bind:value={prefix}
+            placeholder="Optional prefix"
+            class="w-full sm:max-w-xs h-9 px-3 py-1 text-sm"
+        />
     </div>
 
-    <div class="flex items-center gap-2">
+    <div class="flex flex-wrap items-center justify-center gap-2 w-full sm:w-auto">
         <Button onclick={downloadAll} disabled={!canDownload} class="h-9 px-3 py-1">
-            <Download /> Download
+            <Download /> <span class="hidden min-[20rem]:inline">Download</span>
         </Button>
 
         <Button onclick={downloadZip} disabled={!canDownload} variant="secondary" class="h-9 px-3 py-1">
-            <FileArchive /> ZIP
+            <FileArchive /> <span class="hidden min-[20rem]:inline">ZIP</span>
         </Button>
 
         <AlertDialog.Root bind:open={clearDialogOpen}>
-            <AlertDialog.Trigger disabled={!canDownload} class={`h-9 px-3 py-1 ${buttonVariants({ variant: "destructive" })}`}>
-                <Trash /> Clear&nbsp;All
+            <AlertDialog.Trigger disabled={!canDownload} class={`h-9 px-3 py-1 ${buttonVariants({ variant: "destructive" })}`}> 
+                <Trash /> <span class="hidden min-[20rem]:inline">Clear&nbsp;All</span>
             </AlertDialog.Trigger>
 
             <AlertDialog.Content position="bottom-right">
