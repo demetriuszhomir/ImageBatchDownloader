@@ -7,14 +7,12 @@
     export let toggleTheme: () => void;
 </script>
 
-<header
-    class="fixed top-0 left-0 right-0 z-20 backdrop-blur bg-background/80 border-b p-3 flex items-center justify-between min-h-0 h-12 max-[16rem]:justify-center"
->
+<header class="fixed top-0 left-0 right-0 z-20 backdrop-blur bg-background/80 border-b p-3 flex items-center justify-between min-h-0 h-12">
     <div class="flex items-center gap-2">
         <img src={logoUrl} alt="Logo" class="w-7 h-7 shrink-0" />
-        <span class="font-semibold select-none max-[16rem]:hidden">Image&nbsp;Batch&nbsp;Downloader</span>
+        <span class="font-semibold select-none max-[20rem]:hidden">Image&nbsp;Batch&nbsp;Downloader</span>
     </div>
-    <Button variant="ghost" size="icon" aria-label="Toggle theme" onclick={toggleTheme} class="max-[16rem]:hidden">
+    <Button variant="ghost" size="icon" aria-label="Toggle theme" onclick={toggleTheme}>
         {#if theme === "light"}
             <Sun />
         {:else if theme === "dark"}
