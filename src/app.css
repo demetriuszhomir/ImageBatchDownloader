@@ -113,7 +113,30 @@
     }
 
     body {
-        @apply bg-background text-foreground;
+        @apply text-foreground;
+        background-image: url('$lib/background.jpg') !important;
+        background-attachment: fixed !important;
+        background-position: 0 !important;
+        background-repeat: repeat !important;
+        background-size: 25rem !important;
+    }
+
+    .overlay-background {
+        background-color: color-mix(in srgb, var(--background) 83%, transparent);
+        background-image:
+            radial-gradient(at 15% 85%, color-mix(in srgb, var(--primary) 10%, transparent) 0px, transparent 50%),
+            radial-gradient(at 85% 15%, color-mix(in srgb, var(--accent) 10%, transparent) 0px, transparent 50%);
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .dark .overlay-background {
+        background-color: color-mix(in srgb, var(--background) 92%, transparent);
+        background-image:
+            radial-gradient(at 15% 85%, color-mix(in srgb, var(--primary) 10%, transparent) 0px, transparent 50%),
+            radial-gradient(at 85% 15%, color-mix(in srgb, var(--accent) 15%, transparent) 0px, transparent 50%);
     }
 
     button:hover,
