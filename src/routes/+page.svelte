@@ -47,7 +47,7 @@
     >
         <div
             class="grid gap-3 p-3 pt-15 pb-17 max-[40rem]:pb-30 max-[16rem]:pb-37 max-[10rem]:pb-48"
-            style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr));"
+            style="grid-template-columns:repeat(auto-fill,minmax(130px,1fr));"
         >
             {#each images as img (img.id)}
                 <ImageCard {img} onRemove={removeImg} />

@@ -16,8 +16,8 @@
             aria-label="Add images"
         >
             <div class="flex flex-col items-center gap-1 p-3 text-center select-none">
-                <span class="text-4xl leading-none">＋</span>
-                <span class="text-sm"> Paste / Drag‑n‑Drop / Click to browse </span>
+                <span class="text-4xl leading-none">+</span>
+                <span class="text-sm"> Paste / Drag-n-Drop / Browse </span>
             </div>
         </button>
     </AspectRatio>
