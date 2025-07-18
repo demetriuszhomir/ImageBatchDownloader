@@ -112,13 +112,16 @@
         /* font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif; */
     }
 
-    body {
-        @apply text-foreground;
+    html {
         background-image: url('$lib/background.jpg') !important;
         background-attachment: fixed !important;
         background-position: 0 !important;
         background-repeat: repeat !important;
         background-size: 25rem !important;
+    }
+
+    body {
+        @apply text-foreground;
     }
 
     .overlay-background {

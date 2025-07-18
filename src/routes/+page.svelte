@@ -40,7 +40,7 @@
     }
 </script>
 
-<main class="flex flex-col flex-1 min-h-0 h-[100dvh] overlay-background">
+<main class="flex flex-col flex-1 min-h-0 h-[100dvh]">
     <ScrollArea
         class="flex-1 min-h-0"
         scrollbarYClasses="pt-12 pb-14 max-[40rem]:pb-27 max-[16rem]:pb-34 max-[10rem]:pb-45"
