@@ -23,21 +23,21 @@
         <Input
             bind:value={prefix}
             placeholder="Optional prefix"
-            class="w-full sm:max-w-xs h-9 px-3 py-1 text-sm"
+            class="w-full sm:max-w-xs text-sm"
         />
     </div>
 
     <div class="flex flex-wrap items-center justify-center gap-2 w-full sm:w-auto">
-        <Button onclick={downloadAll} disabled={!canDownload} class="h-9 px-3 py-1">
+        <Button onclick={downloadAll} disabled={!canDownload}>
             <Download /> <span class="hidden min-[20rem]:inline">Download</span>
         </Button>
 
-        <Button onclick={downloadZip} disabled={!canDownload} variant="secondary" class="h-9 px-3 py-1">
+        <Button onclick={downloadZip} disabled={!canDownload} variant="secondary">
             <FileArchive /> <span class="hidden min-[20rem]:inline">ZIP</span>
         </Button>
 
         <AlertDialog.Root bind:open={clearDialogOpen}>
-            <AlertDialog.Trigger disabled={!canDownload} class={`h-9 px-3 py-1 ${buttonVariants({ variant: "destructive" })}`}> 
+            <AlertDialog.Trigger disabled={!canDownload} class={buttonVariants({ variant: "destructive" })}>
                 <Trash /> <span class="hidden min-[20rem]:inline">Clear&nbsp;All</span>
             </AlertDialog.Trigger>
 
