@@ -19,14 +19,14 @@ export function applyTheme(theme: Theme) {
     if (typeof document === 'undefined') return;
     if (theme === 'system') {
         if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.body.classList.add('dark');
+            document.documentElement.classList.add('dark');
         } else {
-            document.body.classList.remove('dark');
+            document.documentElement.classList.remove('dark');
         }
     } else if (theme === 'dark') {
-        document.body.classList.add('dark');
+        document.documentElement.classList.add('dark');
     } else {
-        document.body.classList.remove('dark');
+        document.documentElement.classList.remove('dark');
     }
 }
 
