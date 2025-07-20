@@ -8,6 +8,7 @@
     import Footer from "$lib/components/Footer.svelte";
 
     import { fileToDataUrl, type ImageData, downloadAllSeparate, downloadZip } from "$lib/file-utils";
+    import { withWaitCursor } from "$lib/utils";
     import { setupPasteDrop } from "$lib/paste-drop";
 
     let images = $state<ImageData[]>([]);
@@ -20,9 +21,11 @@
         for (let i = 0; i < files.length; i++) addFile(files[i]!);
     }
     async function addFile(file: File) {
-        if (!file.type.startsWith("image/")) return;
-        const dataUrl = await fileToDataUrl(file);
-        images = [...images, { id: nextId++, file, dataUrl }];
+        await withWaitCursor(async () => {
+            if (!file.type.startsWith("image/")) return;
+            const dataUrl = await fileToDataUrl(file);
+            images = [...images, { id: nextId++, file, dataUrl }];
+        });
     }
     function removeImg(id: number) {
         images = images.filter((i) => i.id !== id);
@@ -32,11 +35,11 @@
     }
 
     function dlAllSeparate() {
-        downloadAllSeparate(images, prefix);
+        withWaitCursor(() => downloadAllSeparate(images, prefix));
     }
 
     function dlZip() {
-        downloadZip(images, prefix);
+        withWaitCursor(() => downloadZip(images, prefix));
     }
 </script>
 
