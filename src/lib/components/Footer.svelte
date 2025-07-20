@@ -41,7 +41,7 @@
                 <Trash /> <span class="hidden min-[20rem]:inline">Clear&nbsp;All</span>
             </AlertDialog.Trigger>
 
-            <AlertDialog.Content position="bottom-right">
+            <AlertDialog.Content position="bottom-right" interactOutsideBehavior="close">
                 <AlertDialog.Header>
                     <AlertDialog.Title>Clear all images?</AlertDialog.Title>
                     <AlertDialog.Description>This action cannot be undone.</AlertDialog.Description>
