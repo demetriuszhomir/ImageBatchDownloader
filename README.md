@@ -30,8 +30,8 @@ The prototype is feature-complete and created entirely using GitHub Copilot.
 ## Features
 
 <div align="center">
-    <img src="https://github.com/user-attachments/assets/f67d2814-97f0-4474-8336-485decc4cc10#gh-light-mode-only" width="640" />
-    <img src="https://github.com/user-attachments/assets/c671deca-fed3-4bea-af1d-67f2e787e918#gh-dark-mode-only" width="640" />
+    <img src="https://github.com/user-attachments/assets/bd190e7e-b9f2-4800-9b83-b01cfe5422d0#gh-light-mode-only" width="640" />
+    <img src="https://github.com/user-attachments/assets/8a5dd912-4aff-4ec6-afb9-60264f26fddf#gh-dark-mode-only" width="640" />
 </div>
 
 - **🖼️ Easy Image Collection**
