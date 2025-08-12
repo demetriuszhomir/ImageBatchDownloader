@@ -123,31 +123,3 @@
         </Card.Content>
     </Card.Root>
 </div>
-
-<!-- ---------------------------------
-     Manual test cases (run-through)
-     ---------------------------------
-1) Light/Dark screenshots auto-toggle
-   - Expect only the light image visible in light mode, dark in dark mode.
-   - Query by [data-testid="screenshots"] and ensure exactly one <img> is visible.
-
-2) Download CTA
-   - [data-testid="download-cta"] exists and href points to v1.0.0 release URL.
-
-3) Use online CTA
-   - [data-testid="online-cta"] exists and href points to https://image-batch-downloader.demetriuszhomir.com/app
-
-4) Header site icon link
-   - [data-testid="site-link"] exists in the header-right and navigates to https://demetriuszhomir.com
-   - Page has no visible footer link text "demetriuszhomir.com".
-
-5) Layout & scroll behavior
-   - On small heights (e.g., mobile landscape), content centers initially and page scrolls vertically if overflow.
-
-6) Content requirements
-   - Title present, tagline matches README wording.
-   - No GitHub repo link; only direct v1.0.0 link.
-
-7) Icons
-   - All icons are from @lucide/svelte (no inline SVGs).
--->
