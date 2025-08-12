@@ -1,6 +1,4 @@
 <script lang="ts">
-    // Svelte 5 + shadcn-svelte + Tailwind v4
-    // Imports follow the user's paths and lucide package choice
     import * as Card from "@/lib/components/ui/card/index.js";
     import Button from "@/lib/components/ui/button/button.svelte";
     import { Clipboard, MousePointerClick, FolderOpen, Download, Archive, Tag, Clock, AtSign, Globe } from "@lucide/svelte";
@@ -10,7 +8,6 @@
     import appDarkUrl from "$lib/app-dark.png";
 </script>
 
-<!-- Single-screen landing. Contents centered in both columns, including single-column mobile layout. -->
 <div class="min-h-[100svh] w-full grid place-items-center overflow-y-auto">
     <Card.Root class="max-md:shadow-none max-md:border-none max-md:bg-transparent shadow-lg border-muted/40 min-md:w-[min(92vw,980px)] min-md:m-2">
         <Card.Content>
@@ -36,7 +33,6 @@
 
             <!-- Content -->
             <div class="grid md:grid-cols-2 gap-4 items-start">
-                <!-- Left panel centered -->
                 <div class="flex flex-col gap-2 items-center justify-center">
                     <div class="rounded-md shadow-sm overflow-hidden border border-muted/30 bg-muted/10 max-w-[35rem]" data-testid="screenshots">
                         <img
