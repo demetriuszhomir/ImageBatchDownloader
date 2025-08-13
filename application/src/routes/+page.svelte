@@ -43,6 +43,10 @@
     }
 </script>
 
+<svelte:head>
+    <meta name="robots" content="noindex, nofollow" />
+</svelte:head>
+
 <main class="flex flex-col flex-1 min-h-0 h-[100dvh]">
     <ScrollArea
         class="flex-1 min-h-0"
