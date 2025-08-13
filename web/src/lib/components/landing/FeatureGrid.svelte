@@ -3,7 +3,7 @@
     import FeatureCategory from "./FeatureCategory.svelte";
 </script>
 
-<div class="flex flex-col gap-2 w-full max-w-md mx-auto">
+<section class="flex flex-col gap-2 w-full max-w-md mx-auto">
     <div>
         <FeatureCategory
             title="Easy Image Collection"
@@ -25,4 +25,4 @@
             ]}
         />
     </div>
-</div>
+</section>

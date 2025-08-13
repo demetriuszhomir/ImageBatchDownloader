@@ -8,7 +8,7 @@
     } = $props();
 </script>
 
-<div class={wrapperClass} data-testid="screenshots">
+<figure class={wrapperClass} data-testid="screenshots">
     <img src={lightSrc} alt={altLight} class="block dark:hidden w-full h-auto" loading="lazy" />
     <img src={darkSrc} alt={altDark} class="hidden dark:block w-full h-auto" loading="lazy" />
-</div>
+</figure>
