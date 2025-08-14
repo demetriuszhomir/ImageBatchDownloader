@@ -15,18 +15,15 @@ export function saveTheme(theme: Theme) {
     }
 }
 
+// Rely on global window.applyTheme injected early in app.html to avoid duplication.
+declare global {
+    interface Window { applyTheme?: (theme: Theme) => void }
+}
+
 export function applyTheme(theme: Theme) {
     if (typeof document === 'undefined') return;
-    if (theme === 'system') {
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    } else if (theme === 'dark') {
-        document.documentElement.classList.add('dark');
-    } else {
-        document.documentElement.classList.remove('dark');
+    if (typeof window !== 'undefined' && typeof window.applyTheme === 'function') {
+        window.applyTheme(theme);
     }
 }
 
