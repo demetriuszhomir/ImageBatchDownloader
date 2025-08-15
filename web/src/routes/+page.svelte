@@ -17,7 +17,7 @@
 
     // SEO canonical URLs
     const CANONICAL_URL = "https://image-batch-downloader.demetriuszhomir.com/";
-    const OG_IMAGE = "https://image-batch-downloader.demetriuszhomir.com/IBD-media.jpg"; // served from static/
+    const OG_IMAGE = "https://image-batch-downloader.demetriuszhomir.com/media.jpg"; // served from static/
 </script>
 
 <svelte:head>
