@@ -11,6 +11,13 @@
     import { withWaitCursor } from "$lib/utils";
     import { setupPasteDrop } from "$lib/paste-drop";
 
+    const title = "Image Batch Downloader";
+    const subtitle = "Paste images & download them in batches. Fully local, single-file, no installation.";
+
+    // SEO canonical URLs
+    const CANONICAL_URL = "https://image-batch-downloader.demetriuszhomir.com/";
+    const OG_IMAGE = "https://image-batch-downloader.demetriuszhomir.com/IBD-media.jpg"; // served from static
+
     let images = $state<ImageData[]>([]);
     let prefix = $state("");
     let nextId = $state(0);
@@ -44,7 +51,29 @@
 </script>
 
 <svelte:head>
-    <meta name="robots" content="noindex, nofollow" />
+    <meta name="robots" content="noindex, nofollow, max-image-preview:large" />
+
+    <link rel="canonical" href={CANONICAL_URL} />
+    <meta name="description" content={subtitle} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={title} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={subtitle} />
+    <meta property="og:url" content={CANONICAL_URL} />
+    <meta property="og:image" content={OG_IMAGE} />
+    <meta property="og:image:alt" content={title} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={subtitle} />
+    <meta name="twitter:image" content={OG_IMAGE} />
+    <meta name="twitter:image:alt" content={title} />
+
+    <!-- Extras -->
+    <meta name="keywords" content="image downloader, batch download images, paste images, zip images, offline, local" />
 </svelte:head>
 
 <main class="flex flex-col flex-1 min-h-0 h-[100dvh]">
