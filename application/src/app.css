@@ -113,7 +113,7 @@
     }
 
     html {
-        background-image: url('$lib/bg.jpg');
+        background-image: url('$lib/bg.avif');
         background-attachment: fixed;
         background-position: 0;
         background-repeat: repeat;
@@ -121,7 +121,7 @@
     }
 
     html.dark {
-        background-image: url('$lib/bg-dark.jpg');
+        background-image: url('$lib/bg-dark.avif');
     }
 
     body {
