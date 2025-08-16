@@ -8,6 +8,7 @@ Paste images & download them in batches.
 
 Fully local, single-file, no installation required.
 
+[image-batch-downloader.demetriuszhomir.com](https://image-batch-downloader.demetriuszhomir.com)
 </div>
 
 ## Latest Download
