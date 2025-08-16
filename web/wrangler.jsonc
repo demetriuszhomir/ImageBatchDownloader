@@ -1,0 +1,18 @@
+{
+    "name": "ibd-web-lp",
+    "compatibility_date": "2025-04-01",
+    "assets": {
+        "directory": "./build/",
+        "not_found_handling": "single-page-application"
+    },
+    "preview_urls": true,
+    "workers_dev": true,
+    "env": {
+        "dev": {
+            // environment-specific configuration goes here
+        },
+        "qa": {
+            // environment-specific configuration goes here
+        }
+    }
+}

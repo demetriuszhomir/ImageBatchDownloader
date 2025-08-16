@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Image Batch Downloader | by Dmitry Zhomir</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+        // Global theme application logic (exposed as window.applyTheme)
+        (function () {
+            function coreApplyTheme(theme) {
+                if (typeof document === 'undefined') return;
+                if (theme === 'system') {
+                    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                } else if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }
+            // expose globally
+            window.applyTheme = coreApplyTheme;
+            // Early application to avoid flash
+            try {
+                var t = localStorage.getItem('theme');
+                if (t !== 'light' && t !== 'dark' && t !== 'system') t = 'system';
+                coreApplyTheme(t);
+            } catch (e) {
+                // fallback to system
+                coreApplyTheme('system');
+            }
+        })();
+    </script>
+    %sveltekit.head%
+</head>
+
+<body data-sveltekit-preload-data="hover" class="overlay-background">
+    <div style="display: contents">%sveltekit.body%</div>
+</body>
+
+</html>
