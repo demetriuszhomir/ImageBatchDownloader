@@ -1,7 +1,8 @@
 <script lang="ts">
+    import type { IconProps } from "@lucide/svelte";
     import type { Component } from "svelte";
 
-    type IconCmp = Component<any>;
+    type IconCmp = Component<IconProps>;
     type Props = { Icon: IconCmp; text: string; wrapperClass?: string };
 
     let { Icon, text, wrapperClass = "flex items-start gap-3 p-3" }: Props = $props();
