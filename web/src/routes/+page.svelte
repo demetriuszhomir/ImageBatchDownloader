@@ -1,13 +1,10 @@
 <script lang="ts">
     import LandingCard from "$lib/components/landing/LandingCard.svelte";
     import HeroHeader from "$lib/components/landing/HeroHeader.svelte";
-    import ScreenshotPanel from "$lib/components/landing/ScreenshotPanel.svelte";
     import CtaButtons from "$lib/components/landing/CtaButtons.svelte";
     import FeatureGrid from "$lib/components/landing/FeatureGrid.svelte";
 
     import logoUrl from "$lib/logo.svg";
-    import appLightUrl from "$lib/app-light.png";
-    import appDarkUrl from "$lib/app-dark.png";
     
     const siteUrl = "https://demetriuszhomir.com";
     const title = "Image Batch Downloader";
@@ -51,12 +48,10 @@
 
         <div class="grid md:grid-cols-2 gap-4 items-start">
             <div class="flex flex-col gap-2 items-center justify-center">
-                <ScreenshotPanel
-                    lightSrc={appLightUrl}
-                    darkSrc={appDarkUrl}
-                    altLight="Image Batch Downloader – light mode screenshot"
-                    altDark="Image Batch Downloader – dark mode screenshot"
-                />
+                <figure class="rounded-md shadow-sm overflow-hidden border border-muted/30 bg-muted/10 max-w-[35rem]" data-testid="screenshots">
+                    <enhanced:img src="$lib/app-light.png?format=avif" alt="Image Batch Downloader – light mode screenshot" class="block dark:hidden w-full h-auto" loading="lazy" />
+                    <enhanced:img src="$lib/app-dark.png?format=avif" alt="Image Batch Downloader – dark mode screenshot" class="hidden dark:block w-full h-auto" loading="lazy" />
+                </figure>
 
                 <CtaButtons {onlineUrl} {downloadUrl} />
             </div>
