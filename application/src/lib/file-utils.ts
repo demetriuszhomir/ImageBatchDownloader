@@ -18,6 +18,17 @@ export function generateTimestamp(): string {
         `-UTC${sign}${hh}${mm === '00' ? '' : ':' + mm}`;
 }
 
+function isMobileAndroidOrIOS(): boolean {
+    const ua = navigator.userAgent || '';
+    return /Android/i.test(ua) || /iPhone|iPad|iPod/i.test(ua);
+}
+
+async function dataUrlToFile(dataUrl: string, filename: string, type?: string): Promise<File> {
+    const res = await fetch(dataUrl);
+    const blob = await res.blob();
+    return new File([blob], filename, { type: type || blob.type });
+}
+
 export function downloadSingleImage(img: ImageData, idx: number, prefix: string) {
     const ext = img.file.type.split('/')[1];
     const a = document.createElement('a');
@@ -27,6 +38,23 @@ export function downloadSingleImage(img: ImageData, idx: number, prefix: string)
 }
 
 export async function downloadAllSeparate(images: ImageData[], prefix: string) {
+    if (isMobileAndroidOrIOS()) {
+        const nav = navigator;
+        if (!nav.share) {
+            return;
+        }
+        const files = await Promise.all(images.map(async (img, idx) => {
+            const ext = img.file.type.split('/')[1];
+            const filename = `${prefix ? prefix + '_' : ''}image_${idx + 1}${generateTimestamp()}.${ext}`;
+            return dataUrlToFile(img.dataUrl, filename, img.file.type);
+        }));
+        if (nav.canShare && !nav.canShare({ files })) {
+            return;
+        }
+        await nav.share({ files });
+        return;
+    }
+
     for (let i = 0; i < images.length; i++) {
         downloadSingleImage(images[i], i, prefix);
         await new Promise((r) => setTimeout(r, 300));
