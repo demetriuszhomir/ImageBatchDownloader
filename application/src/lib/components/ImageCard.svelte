@@ -14,9 +14,9 @@
         <img src={img.dataUrl} alt="preview" class="object-cover w-full h-full rounded-md" />
     </AspectRatio>
     <Button
-        variant="destructive"
+        variant="outline"
         size="icon"
-        class="absolute top-2 right-2 m-1 w-8 h-8 min-w-0 min-h-0 opacity-0 group-hover:opacity-100 transition-opacity"
+        class="absolute top-2 right-2 m-1 w-8 h-8 min-w-0 min-h-0"
         aria-label="Remove"
         onclick={() => onRemove(img.id)}
     >
