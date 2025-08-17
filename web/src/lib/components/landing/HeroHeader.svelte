@@ -18,7 +18,7 @@
         <div class="flex items-center gap-3">
             <!-- svelte-ignore a11y_img_redundant_alt -->
             <img src={logoUrl} alt="Image Batch Downloader logo" class="h-9 w-9" />
-            <h1 class="text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight leading-tight">{title}</h1>
+            <h1 class="text-xl md:text-3xl font-semibold tracking-tight leading-tight">{title}</h1>
         </div>
 
         <a href={siteUrl} target="_blank" rel="noreferrer" class="shrink-0">

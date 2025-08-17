@@ -10,7 +10,7 @@
     const title = "Image Batch Downloader";
     const subtitle = "Paste images & download them in batches. Fully local, single-file, no installation.";
     const onlineUrl = "https://image-batch-downloader.demetriuszhomir.com/app";
-    const downloadUrl = "https://github.com/demetriuszhomir/ImageBatchDownloader/releases/tag/v1.0.0";
+    const downloadUrl = "https://github.com/demetriuszhomir/ImageBatchDownloader/releases/tag/v1.0.1";
 
     // SEO canonical URLs
     const CANONICAL_URL = "https://image-batch-downloader.demetriuszhomir.com/";
@@ -42,7 +42,7 @@
     <meta name="keywords" content="image downloader, batch download images, paste images, zip images, offline, local" />
 </svelte:head>
 
-<main id="main" class="min-h-[100svh] w-full grid place-items-center overflow-y-auto">
+<main id="main" class="min-h-[100svh] w-full grid min-md:place-items-center overflow-y-auto">
     <LandingCard>
         <HeroHeader {logoUrl} siteUrl={siteUrl} {title} {subtitle} />
 

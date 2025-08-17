@@ -15,7 +15,7 @@ Fully local, single-file, no installation required.
 
 **See the [Releases](https://github.com/demetriuszhomir/ImageBatchDownloader/releases) to download the latest builds.**
 
-- 🌟 **v1.0.0**: https://github.com/demetriuszhomir/ImageBatchDownloader/releases/tag/v1.0.0
+- 🌟 **v1.0.1**: https://github.com/demetriuszhomir/ImageBatchDownloader/releases/tag/v1.0.1
 
 <details>
 <summary>
@@ -31,8 +31,8 @@ The prototype is feature-complete and created entirely using GitHub Copilot.
 ## Features
 
 <div align="center">
-    <img src="https://github.com/user-attachments/assets/bd190e7e-b9f2-4800-9b83-b01cfe5422d0#gh-light-mode-only" width="640" />
-    <img src="https://github.com/user-attachments/assets/8a5dd912-4aff-4ec6-afb9-60264f26fddf#gh-dark-mode-only" width="640" />
+    <img src="web/src/lib/app-light.png#gh-light-mode-only" width="640" />
+    <img src="web/src/lib/app-dark.png#gh-dark-mode-only" width="640" />
 </div>
 
 - **🖼️ Easy Image Collection**
