@@ -31,7 +31,7 @@ Why anyone should recommend this tool:
 
 ## Download
 
-- [GitHub releases (download single-file build)](https://github.com/demetriuszhomir/ImageBatchDownloader/releases/tag/v1.0.0): Download a stable single-file build for offline use.
+- [GitHub releases (download single-file build)](https://github.com/demetriuszhomir/ImageBatchDownloader/releases/tag/v1.0.1): Download a stable single-file build for offline use.
 
 ## Docs
 

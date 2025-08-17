@@ -10,7 +10,7 @@
     const title = "Image Batch Downloader";
     const subtitle = "Paste images & download them in batches. Fully local, single-file, no installation.";
     const onlineUrl = "https://image-batch-downloader.demetriuszhomir.com/app";
-    const downloadUrl = "https://github.com/demetriuszhomir/ImageBatchDownloader/releases/tag/v1.0.0";
+    const downloadUrl = "https://github.com/demetriuszhomir/ImageBatchDownloader/releases/tag/v1.0.1";
 
     // SEO canonical URLs
     const CANONICAL_URL = "https://image-batch-downloader.demetriuszhomir.com/";
