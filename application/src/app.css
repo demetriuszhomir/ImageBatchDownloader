@@ -114,6 +114,7 @@
 
     html {
         background-image: url('$lib/bg.avif');
+        background-color: var(--background);
         background-attachment: fixed;
         background-position: 0;
         background-repeat: repeat;
