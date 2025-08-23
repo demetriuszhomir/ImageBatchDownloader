@@ -18,9 +18,20 @@
 </script>
 
 <svelte:head>
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+
     <link rel="canonical" href={CANONICAL_URL} />
     <meta name="description" content={subtitle} />
-    <meta name="robots" content="index, follow, max-image-preview:large" />
+
+    <!-- JSON-LD -->
+    {@html `<script type="application/ld+json">
+        ${JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            url: CANONICAL_URL,
+            name: title,
+        })}
+    </script>`}
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
