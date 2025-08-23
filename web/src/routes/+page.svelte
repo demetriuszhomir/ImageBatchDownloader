@@ -24,14 +24,12 @@
     <meta name="description" content={subtitle} />
 
     <!-- JSON-LD -->
-    {@html `<script type="application/ld+json">
-        ${JSON.stringify({
+    {@html `<script type="application/ld+json">${JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebSite",
             url: CANONICAL_URL,
             name: title,
-        })}
-    </script>`}
+        })}</script>`}
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
