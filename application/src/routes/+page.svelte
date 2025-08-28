@@ -67,13 +67,14 @@
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@DemetriusZhomir" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={subtitle} />
     <meta name="twitter:image" content={OG_IMAGE} />
     <meta name="twitter:image:alt" content={title} />
 
     <!-- Extras -->
-    <meta name="keywords" content="image downloader, batch download images, paste images, zip images, offline, local" />
+    <meta name="keywords" content="image downloader, batch download images, bulk download images, paste images, zip images, offline, local, private, no installation" />
 </svelte:head>
 
 <main class="flex flex-col flex-1 min-h-0 h-[100dvh]">
