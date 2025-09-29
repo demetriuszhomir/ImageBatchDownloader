@@ -31,8 +31,8 @@ The prototype is feature-complete and created entirely using GitHub Copilot.
 ## Features
 
 <div align="center">
-    <img src="web/src/lib/app-light.png#gh-light-mode-only" width="640" />
-    <img src="web/src/lib/app-dark.png#gh-dark-mode-only" width="640" />
+    <img src="https://github.com/user-attachments/assets/9395cae0-f279-4f4f-933b-8a7a3073b915#gh-light-mode-only" width="640" />
+    <img src="https://github.com/user-attachments/assets/f6473364-8a49-48d0-98dd-9b79a802cf28#gh-dark-mode-only" width="640" />
 </div>
 
 - **🖼️ Easy Image Collection**
