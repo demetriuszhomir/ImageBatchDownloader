@@ -11,7 +11,7 @@ const buildDir = resolve('build');
 const projectRoot = dirname(buildDir);
 const repoRoot = dirname(projectRoot); // ImageBatchDownloader root
 const licensePath = resolve(repoRoot, 'LICENSE');
-const noticePath = resolve(projectRoot, 'NOTICE');
+const noticePath = resolve(repoRoot, 'NOTICE');
 
 // Create zip with build contents and license files
 const zip = new JSZip();
