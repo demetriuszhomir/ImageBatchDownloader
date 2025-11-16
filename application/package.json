@@ -1,11 +1,13 @@
 {
 	"name": "imagebatchdownloader",
 	"private": true,
-	"version": "0.2.0",
+	"version": "1.0.2",
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "vite build && bun -e \"require('fs').rmSync('build/_app', { recursive: true, force: true })\"",
+		"build": "vite build && bun scripts/post-build.ts",
+		"notice": "bunx generate-license-file --input package.json --output ../NOTICE",
+		"release": "bun scripts/release.ts",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
