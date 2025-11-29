@@ -64,19 +64,3 @@ const zipBuffer = await zip.generateAsync({
 
 writeFileSync(join(projectRoot, `${versionedName}.zip`), zipBuffer);
 console.log(`✓ Created ${versionedName}.zip`);
-
-// Update README.md with new version
-const readmePath = resolve(repoRoot, 'README.md');
-if (existsSync(readmePath)) {
-  let readmeContent = readFileSync(readmePath, 'utf-8');
-  const versionTag = `v${packageJson.version}`;
-  
-  // Update the version line: - 🌟 **v1.0.1**: https://...
-  readmeContent = readmeContent.replace(
-    /- 🌟 \*\*v[\d.]+\*\*: https:\/\/github\.com\/demetriuszhomir\/ImageBatchDownloader\/releases\/tag\/v[\d.]+/,
-    `- 🌟 **${versionTag}**: https://github.com/demetriuszhomir/ImageBatchDownloader/releases/tag/${versionTag}`
-  );
-  
-  writeFileSync(readmePath, readmeContent);
-  console.log(`✓ Updated README.md to ${versionTag}`);
-}

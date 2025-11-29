@@ -15,7 +15,7 @@ Fully local, single-file, no installation required.
 
 **See the [Releases](https://github.com/demetriuszhomir/ImageBatchDownloader/releases) to download the latest builds.**
 
-- 🌟 **v1.0.2**: https://github.com/demetriuszhomir/ImageBatchDownloader/releases/tag/v1.0.2
+- 🌟 https://github.com/demetriuszhomir/ImageBatchDownloader/releases/latest
 
 <details>
 <summary>
